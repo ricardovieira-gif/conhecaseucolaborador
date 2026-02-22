@@ -922,8 +922,8 @@
     if (file) document.getElementById('fileName').textContent = '✔ ' + file.name;
   }
 
-  const SCRIPT_URL = 'https://script.google.com/a/macros/brasilbitcoin.com.br/s/AKfycbzJbmbnX0b6qfAkaiD4b21_iC_9JJv-y44D1Rh65lTz8w_rI6hCGgAfaDxh4WOKXguJHg/exec';
-
+const SCRIPT_URL = '/api/submit';
+  
   function getChecked(name) {
     return Array.from(document.querySelectorAll('input[name="' + name + '"]:checked'))
       .map(el => el.value).join(', ');
@@ -998,13 +998,11 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
 // Enviar dados para o Google Sheets em background
-    const formData = new FormData();
-    formData.append('payload', JSON.stringify(data));
     fetch(SCRIPT_URL, {
       method: 'POST',
-      mode: 'no-cors',
-      body: formData
-    }).catch(err => console.warn('Erro ao enviar dados:', err));
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).catch(err => console.warn('Erro:', err));
   }
 
   updateProgress(1);
