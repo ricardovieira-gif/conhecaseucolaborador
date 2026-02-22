@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conheça Seu Colaborador — Brasil Bitcoin</title>
+<style>
+  /* ── TOKENS ─────────────────────────────────── */
+  :root {
+    --bb-navy:   #071A2B;
+    --bb-blue:   #0B5CFF;
+    --bb-blue-2: #2C76FF;
+    --bb-mint:   #20D3A6;
+
+    --bg:      #F6F8FC;
+    --surface: #FFFFFF;
+    --text:    #0B1220;
+    --muted:   #5D6B7A;
+    --border:  rgba(7,26,43,0.10);
+
+    --success: #16A34A;
+    --danger:  #EF4444;
+
+    --radius:    14px;
+    --radius-lg: 22px;
+    --shadow:      0 10px 30px rgba(7,26,43,0.10);
+    --shadow-soft: 0 4px 14px rgba(7,26,43,0.07);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-font-smoothing: antialiased; }
+  body {
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 80px;
+  }
+
+  /* ── HERO INTRO (estático, topo) ─────────────── */
+  .hero {
+    background:
+      radial-gradient(900px 380px at 10% 10%, rgba(11,92,255,.38), transparent 60%),
+      radial-gradient(700px 320px at 90% 0%,  rgba(44,118,255,.26), transparent 55%),
+      linear-gradient(180deg, #071A2B 0%, #061626 100%);
+    color: #fff;
+    padding: 52px 24px 44px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 260px; height: 260px;
+    border-radius: 44px;
+    background: linear-gradient(135deg, rgba(32,211,166,.18), rgba(11,92,255,.18));
+    transform: rotate(18deg);
+    pointer-events: none;
+  }
+  .hero-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #6EB6FF;
+    margin-bottom: 20px;
+  }
+  .hero-logo .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #6EB6FF;
+    box-shadow: 0 0 0 4px rgba(110,182,255,.25);
+  }
+  .hero p.hero-title {
+    font-size: clamp(24px, 3vw, 34px);
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0;
+    line-height: 1.3;
+  }
+
+    /* ── BARRA DE PROGRESSO ─────────────────────── */
+  .progress-wrap {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px;
+    box-shadow: 0 2px 8px rgba(7,26,43,0.06);
+  }
+  .progress-info {
+    display: flex; justify-content: space-between; align-items: center;
+    max-width: 720px; margin: 0 auto 8px;
+    font-size: 12px; font-weight: 600; color: var(--muted);
+  }
+  .progress-info strong { color: var(--bb-blue); }
+  .progress-bar-bg {
+    max-width: 720px; margin: 0 auto;
+    height: 5px; background: rgba(7,26,43,0.08);
+    border-radius: 99px; overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--bb-blue), var(--bb-mint));
+    border-radius: 99px;
+    transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+    width: 0%;
+  }
+
+  .form-container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+
+  .section { display: none; animation: fadeSlideIn 0.4s ease; }
+  .section.active { display: block; }
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-header {
+    padding: 44px 0 12px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 28px;
+  }
+  .section-tag {
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--bb-blue); margin-bottom: 6px;
+  }
+  .section-title {
+    font-size: 22px; font-weight: 700;
+    color: var(--bb-navy); line-height: 1.2;
+  }
+  .section-desc {
+    margin-top: 8px; font-size: 14px;
+    color: var(--muted); line-height: 1.6;
+  }
+
+  .q-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+    padding: 22px;
+    margin-bottom: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .q-card:focus-within {
+    border-color: rgba(11,92,255,0.35);
+    box-shadow: 0 0 0 3px rgba(11,92,255,0.08), var(--shadow-soft);
+  }
+  .q-label {
+    font-size: 15px; font-weight: 600;
+    color: var(--text); margin-bottom: 14px;
+    line-height: 1.5; display: flex; gap: 6px; align-items: flex-start;
+  }
+  .q-label .req { color: var(--bb-blue); font-size: 17px; line-height: 1; }
+  .q-hint { font-size: 12px; color: var(--muted); margin-top: -10px; margin-bottom: 12px; }
+
+  input[type="text"], input[type="email"], textarea, select {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 11px 15px;
+    font-family: inherit; font-size: 14px; color: var(--text);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    appearance: none; -webkit-appearance: none;
+  }
+  input[type="text"]:focus, input[type="email"]:focus,
+  textarea:focus, select:focus {
+    border-color: var(--bb-blue);
+    box-shadow: 0 0 0 3px rgba(11,92,255,0.12);
+    background: #fff;
+  }
+  textarea { min-height: 100px; resize: vertical; }
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235D6B7A' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    padding-right: 40px;
+  }
+
+  .options-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+  .option-pill { position: relative; }
+  .option-pill input { position: absolute; opacity: 0; width: 0; height: 0; }
+  .option-pill label {
+    display: block;
+    padding: 9px 16px;
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    font-size: 13px; font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.18s;
+    user-select: none;
+    white-space: nowrap;
+    background: var(--surface);
+  }
+  .option-pill input:checked + label {
+    background: rgba(11,92,255,0.07);
+    border-color: var(--bb-blue);
+    color: var(--bb-blue);
+    font-weight: 600;
+  }
+  .option-pill label:hover {
+    border-color: rgba(11,92,255,0.35);
+    color: var(--text);
+  }
+
+  .conditional {
+    display: none;
+    margin-top: 16px; padding-top: 16px;
+    border-top: 1px dashed rgba(7,26,43,0.12);
+    animation: fadeSlideIn 0.3s ease;
+  }
+  .conditional.visible { display: block; }
+  .conditional .q-label {
+    font-size: 14px; color: var(--muted); margin-bottom: 10px;
+  }
+
+  .file-drop {
+    border: 2px dashed rgba(7,26,43,0.15);
+    border-radius: var(--radius);
+    padding: 32px; text-align: center;
+    cursor: pointer; transition: all 0.2s;
+    background: var(--bg);
+  }
+  .file-drop:hover, .file-drop.drag {
+    border-color: var(--bb-blue);
+    background: rgba(11,92,255,0.04);
+  }
+  .file-drop .icon { font-size: 32px; margin-bottom: 10px; }
+  .file-drop p { font-size: 13px; color: var(--muted); }
+  .file-drop strong { color: var(--bb-blue); }
+  input[type="file"] { display: none; }
+  .file-name { margin-top: 10px; font-size: 12px; color: var(--success); }
+
+  .nav-buttons {
+    display: flex; justify-content: space-between;
+    align-items: center; padding: 28px 0; gap: 16px;
+  }
+  .btn {
+    font-size: 14px; font-weight: 700;
+    padding: 13px 28px; border-radius: 99px;
+    border: none; cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-back {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+  .btn-back:hover { border-color: rgba(7,26,43,0.25); color: var(--text); }
+  .btn-next {
+    background: var(--bb-blue);
+    color: #fff;
+    margin-left: auto;
+    box-shadow: 0 8px 18px rgba(11,92,255,0.22);
+  }
+  .btn-next:hover { filter: brightness(1.08); transform: translateY(-1px); }
+  .btn-submit {
+    background: linear-gradient(135deg, var(--bb-blue), var(--bb-mint));
+    color: #fff;
+    margin-left: auto;
+    box-shadow: 0 8px 22px rgba(11,92,255,0.25);
+  }
+  .btn-submit:hover { transform: translateY(-1px); box-shadow: 0 12px 28px rgba(11,92,255,0.3); }
+
+  #thankyou { display: none; text-align: center; padding: 80px 24px; animation: fadeSlideIn 0.6s ease; }
+  #thankyou.active { display: block; }
+  #thankyou .emoji { font-size: 64px; margin-bottom: 24px; }
+  #thankyou h2 {
+    font-size: 32px; font-weight: 800;
+    color: var(--bb-navy); margin-bottom: 16px;
+  }
+  #thankyou p { font-size: 16px; color: var(--muted); max-width: 440px; margin: 0 auto; line-height: 1.6; }
+
+  .error-msg { display: none; font-size: 12px; color: var(--danger); margin-top: 6px; }
+  .error-msg.show { display: block; }
+  .q-card.has-error { border-color: rgba(239,68,68,0.45); box-shadow: 0 0 0 3px rgba(239,68,68,0.08); }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: rgba(7,26,43,0.15); border-radius: 99px; }
+
+  /* ── RESPONSIVO TABLET ──────────────────────── */
+  @media (max-width: 768px) {
+    .hero { padding: 44px 20px 36px; }
+    .hero-logo { font-size: 18px; }
+    .hero p.hero-title { font-size: clamp(20px, 5vw, 28px); }
+    .form-container { padding: 0 16px; }
+    .section-title { font-size: 19px; }
+    .nav-buttons { padding: 20px 0; }
+  }
+
+  /* ── RESPONSIVO MOBILE ───────────────────────── */
+  @media (max-width: 480px) {
+    .hero { padding: 36px 16px 30px; }
+    .hero-logo { font-size: 15px; gap: 7px; margin-bottom: 14px; }
+    .hero-logo .dot { width: 6px; height: 6px; }
+    .hero p.hero-title { font-size: clamp(18px, 6vw, 24px); }
+    .form-container { padding: 0 12px; }
+    .q-card { padding: 14px; }
+    .q-label { font-size: 14px; }
+    .option-pill label { padding: 8px 12px; font-size: 12px; }
+    .options-grid { gap: 6px; }
+    .btn { padding: 11px 20px; font-size: 13px; }
+    .section-title { font-size: 18px; }
+    .section-header { padding: 32px 0 10px; }
+    .progress-wrap { padding: 10px 16px; }
+    .progress-info { font-size: 11px; }
+    input[type="text"], input[type="email"], textarea, select {
+      font-size: 16px; /* evita zoom automático no iOS */
+    }
+    .nav-buttons { padding: 18px 0; gap: 10px; }
+    #thankyou { padding: 60px 16px; }
+    #thankyou h2 { font-size: 26px; }
+    #thankyou .emoji { font-size: 52px; }
+  }
+
+  /* ── RESPONSIVO PEQUENO (320px) ──────────────── */
+  @media (max-width: 360px) {
+    .hero-logo { font-size: 13px; }
+    .btn { padding: 10px 16px; font-size: 12px; }
+    .option-pill label { padding: 7px 10px; font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-logo"><span class="dot"></span> Brasil Bitcoin <span class="dot"></span></div>
+  <p class="hero-title">Queremos te conhecer melhor 💙</p>
+</div>
+
+<!-- BARRA DE PROGRESSO fixa abaixo do hero -->
+<div class="progress-wrap">
+  <div class="progress-info">
+    <span>Seção <strong id="prog-current">1</strong> de <strong>7</strong></span>
+    <span id="prog-pct">0% concluído</span>
+  </div>
+  <div class="progress-bar-bg">
+    <div class="progress-bar-fill" id="progress-fill"></div>
+  </div>
+</div>
+
+<div class="form-container">
+<form id="mainForm" novalidate>
+
+  <!-- SEÇÃO 1 -->
+  <div class="section active" id="sec1">
+    <div class="section-header">
+      <div class="section-tag">Seção 1 / 7</div>
+      <div class="section-title">Perfil Básico</div>
+    </div>
+
+    <div class="q-card" id="card-email">
+      <div class="q-label">Seu e-mail corporativo <span class="req">*</span></div>
+      <input type="email" id="email" placeholder="voce@brasilbitcoin.com.br">
+      <div class="error-msg" id="err-email">Por favor, informe um e-mail válido.</div>
+    </div>
+
+    <div class="q-card" id="card-nome">
+      <div class="q-label">Nome completo <span class="req">*</span></div>
+      <input type="text" id="nome" placeholder="Seu nome completo">
+      <div class="error-msg" id="err-nome">Por favor, informe seu nome.</div>
+    </div>
+
+    <div class="q-card" id="card-area">
+      <div class="q-label">Área / Time <span class="req">*</span></div>
+      <select id="area">
+        <option value="">Selecione sua área</option>
+        <option>Operações</option><option>Comercial</option><option>Tech</option>
+        <option>Produto</option><option>Marketing</option><option>Financeiro</option>
+        <option>Compliance</option><option>Atendimento</option><option>People/RH</option><option>Outro</option>
+      </select>
+      <div class="error-msg" id="err-area">Por favor, selecione sua área.</div>
+    </div>
+
+    <div class="q-card" id="card-cargo">
+      <div class="q-label">Cargo <span class="req">*</span></div>
+      <input type="text" id="cargo" placeholder="Ex.: Analista de Marketing">
+      <div class="error-msg" id="err-cargo">Por favor, informe seu cargo.</div>
+    </div>
+
+    <div class="q-card" id="card-tempo">
+      <div class="q-label">Tempo de empresa <span class="req">*</span></div>
+      <div class="options-grid">
+        <div class="option-pill"><input type="radio" name="tempo" id="t1" value="0–3 meses"><label for="t1">0–3 meses</label></div>
+        <div class="option-pill"><input type="radio" name="tempo" id="t2" value="3–6 meses"><label for="t2">3–6 meses</label></div>
+        <div class="option-pill"><input type="radio" name="tempo" id="t3" value="6–12 meses"><label for="t3">6–12 meses</label></div>
+        <div class="option-pill"><input type="radio" name="tempo" id="t4" value="1–2 anos"><label for="t4">1–2 anos</label></div>
+        <div class="option-pill"><input type="radio" name="tempo" id="t5" value="2–4 anos"><label for="t5">2–4 anos</label></div>
+        <div class="option-pill"><input type="radio" name="tempo" id="t6" value="4+ anos"><label for="t6">4+ anos</label></div>
+      </div>
+      <div class="error-msg" id="err-tempo">Por favor, selecione uma opção.</div>
+    </div>
+
+    <div class="q-card" id="card-cidade">
+      <div class="q-label">Endereço completo <span class="req">*</span></div>
+      <input type="text" id="cidade" placeholder="Ex.: Rua das Flores, 123 — Jardim Paulista, São Paulo, SP, 01310-000">
+      <div class="error-msg" id="err-cidade">Por favor, informe seu endereço.</div>
+    </div>
+
+    <div class="nav-buttons">
+      <div></div>
+      <button type="button" class="btn btn-next" onclick="goNext(1)">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- SEÇÃO 2 -->
+  <div class="section" id="sec2">
+    <div class="section-header">
+      <div class="section-tag">Seção 2 / 7</div>
+      <div class="section-title">Perfil e Preferências Pessoais</div>
+    </div>
+
+    <div class="q-card" id="card-descricao">
+      <div class="q-label">Como você se descreveria em poucas palavras? <span class="req">*</span></div>
+      <input type="text" id="descricao" placeholder="Ex.: curioso, tranquilo, workaholic reformed...">
+      <div class="error-msg" id="err-descricao">Por favor, preencha este campo.</div>
+    </div>
+
+    <div class="q-card" id="card-hobbies">
+      <div class="q-label">Seus hobbies ou atividades favoritas fora do trabalho <span class="req">*</span></div>
+      <textarea id="hobbies" placeholder="Conte à vontade!"></textarea>
+      <div class="error-msg" id="err-hobbies">Por favor, preencha este campo.</div>
+    </div>
+
+    <div class="q-card" id="card-musica">
+      <div class="q-label">Estilo de música favorito <span class="req">*</span></div>
+      <div class="options-grid">
+        <div class="option-pill"><input type="checkbox" name="musica" id="m1" value="Pop"><label for="m1">Pop</label></div>
+        <div class="option-pill"><input type="checkbox" name="musica" id="m2" value="Sertanejo"><label for="m2">Sertanejo</label></div>
+        <div class="option-pill"><input type="checkbox" name="musica" id="m3" value="Funk"><label for="m3">Funk</label></div>
+        <div class="option-pill"><input type="checkbox" name="musica" id="m4" value="Rock"><label for="m4">Rock</label></div>
+        <div class="option-pill"><input type="checkbox" name="musica" id="m5" value="Pagode"><label for="m5">Pagode</label></div>
+        <div class="option-pill"><input type="checkbox" name="musica" id="m6" value="Eletrônica"><label for="m6">Eletrônica</label></div>
+        <div class="option-pill"><input type="checkbox" name="musica" id="m7" value="Gospel"><label for="m7">Gospel</label></div>
+        <div class="option-pill"><input type="checkbox" name="musica" id="m8" value="Rap/Trap"><label for="m8">Rap/Trap</label></div>
+        <div class="option-pill"><input type="checkbox" name="musica" id="m9" value="MPB"><label for="m9">MPB</label></div>
+        <div class="option-pill"><input type="checkbox" name="musica" id="m10" value="Indie"><label for="m10">Indie</label></div>
+        <div class="option-pill"><input type="checkbox" name="musica" id="m11" value="Outro"><label for="m11">Outro</label></div>
+      </div>
+      <div style="margin-top:14px">
+        <div class="q-label" style="margin-bottom:8px">Cantor(a) ou banda favorita</div>
+        <input type="text" id="musica-artista" placeholder="Ex.: Coldplay, Gusttavo Lima, Anitta...">
+      </div>
+      <div class="error-msg" id="err-musica">Por favor, selecione pelo menos um estilo.</div>
+    </div>
+
+    <div class="q-card" id="card-esporte">
+      <div class="q-label">Esportes / time que acompanha <span class="req">*</span></div>
+      <input type="text" id="esporte" placeholder="Ex.: Flamengo, F1, NBA...">
+      <div class="error-msg" id="err-esporte">Por favor, preencha este campo.</div>
+    </div>
+
+    <div class="q-card" id="card-comida">
+      <div class="q-label">Comida preferida <span class="req">*</span></div>
+      <input type="text" id="comida" placeholder="Ex.: sushi, picanha, pizza...">
+      <div class="error-msg" id="err-comida">Por favor, preencha este campo.</div>
+    </div>
+
+    <div class="q-card" id="card-bebida">
+      <div class="q-label">Bebida preferida <span class="req">*</span></div>
+      <input type="text" id="bebida" placeholder="Ex.: café, suco de maracujá, cerveja artesanal...">
+      <div class="error-msg" id="err-bebida">Por favor, informe sua bebida preferida.</div>
+    </div>
+
+    <div class="q-card" id="card-restricao">
+      <div class="q-label">Você tem alguma restrição alimentar? <span class="req">*</span></div>
+      <div class="options-grid">
+        <div class="option-pill"><input type="radio" name="restricao" id="r1" value="Não" onchange="toggleConditional('cond-restricao', false)"><label for="r1">Não</label></div>
+        <div class="option-pill"><input type="radio" name="restricao" id="r2" value="Sim" onchange="toggleConditional('cond-restricao', true)"><label for="r2">Sim</label></div>
+      </div>
+      <div class="conditional" id="cond-restricao">
+        <div class="q-label">Quais restrições?</div>
+        <textarea id="restricao-quais" placeholder="Ex.: intolerância à lactose, vegetariano/a, alergia a amendoim..."></textarea>
+      </div>
+      <div class="error-msg" id="err-restricao">Por favor, selecione uma opção.</div>
+    </div>
+
+    <div class="q-card" id="card-camisa">
+      <div class="q-label">Tamanho de camiseta <span class="req">*</span></div>
+      <div class="options-grid">
+        <div class="option-pill"><input type="radio" name="camisa" id="cam1" value="PP"><label for="cam1">PP</label></div>
+        <div class="option-pill"><input type="radio" name="camisa" id="cam2" value="P"><label for="cam2">P</label></div>
+        <div class="option-pill"><input type="radio" name="camisa" id="cam3" value="M"><label for="cam3">M</label></div>
+        <div class="option-pill"><input type="radio" name="camisa" id="cam4" value="G"><label for="cam4">G</label></div>
+        <div class="option-pill"><input type="radio" name="camisa" id="cam5" value="GG"><label for="cam5">GG</label></div>
+        <div class="option-pill"><input type="radio" name="camisa" id="cam6" value="XGG"><label for="cam6">XGG</label></div>
+      </div>
+      <div class="error-msg" id="err-camisa">Por favor, selecione seu tamanho de camiseta.</div>
+    </div>
+
+    <div class="q-card" id="card-presente">
+      <div class="q-label">Preferências de presente <span class="req">*</span></div>
+      <div class="options-grid">
+        <div class="option-pill"><input type="checkbox" name="presente" id="pr1" value="Café/chá"><label for="pr1">☕ Café/chá</label></div>
+        <div class="option-pill"><input type="checkbox" name="presente" id="pr2" value="Doces"><label for="pr2">🍫 Doces</label></div>
+        <div class="option-pill"><input type="checkbox" name="presente" id="pr3" value="Gastronomia"><label for="pr3">🍽️ Gastronomia</label></div>
+        <div class="option-pill"><input type="checkbox" name="presente" id="pr4" value="Esporte"><label for="pr4">⚽ Esporte</label></div>
+        <div class="option-pill"><input type="checkbox" name="presente" id="pr5" value="Livros"><label for="pr5">📚 Livros</label></div>
+        <div class="option-pill"><input type="checkbox" name="presente" id="pr6" value="Tecnologia"><label for="pr6">💻 Tecnologia</label></div>
+        <div class="option-pill"><input type="checkbox" name="presente" id="pr7" value="Bem-estar"><label for="pr7">🧘 Bem-estar</label></div>
+        <div class="option-pill"><input type="checkbox" name="presente" id="pr8" value="Itens para casa"><label for="pr8">🏠 Casa</label></div>
+        <div class="option-pill"><input type="checkbox" name="presente" id="pr9" value="Moda"><label for="pr9">👕 Moda</label></div>
+        <div class="option-pill"><input type="checkbox" name="presente" id="pr10" value="Experiências"><label for="pr10">🎬 Experiências</label></div>
+        <div class="option-pill"><input type="checkbox" name="presente" id="pr11" value="Outro"><label for="pr11">Outro</label></div>
+      </div>
+      <div style="margin-top:14px">
+        <div class="q-label" style="margin-bottom:8px">Algo específico que adoraria ganhar?</div>
+        <input type="text" id="presente-especifico" placeholder="Ex.: livro de culinária, squeeze esportiva, voucher de spa...">
+      </div>
+      <div class="error-msg" id="err-presente">Por favor, selecione pelo menos uma opção.</div>
+    </div>
+
+    <div class="q-card" id="card-nao-gosta">
+      <div class="q-label">Algo que você NÃO gosta de ganhar ou prefere evitar? <span class="req">*</span></div>
+      <textarea id="nao-gosta" placeholder="Só pra garantir que a gente não erra!"></textarea>
+      <div class="error-msg" id="err-nao-gosta">Por favor, preencha este campo.</div>
+    </div>
+
+    <div class="nav-buttons">
+      <button type="button" class="btn btn-back" onclick="goBack(2)">← Voltar</button>
+      <button type="button" class="btn btn-next" onclick="goNext(2)">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- SEÇÃO 3 -->
+  <div class="section" id="sec3">
+    <div class="section-header">
+      <div class="section-tag">Seção 3 / 7</div>
+      <div class="section-title">Família e Rotina</div>
+      <div class="section-desc">Essas perguntas são opcionais e ajudam em ações mais personalizadas (ex.: datas importantes).</div>
+    </div>
+
+    <div class="q-card" id="card-civil">
+      <div class="q-label">Estado civil <span class="req">*</span></div>
+      <div class="options-grid">
+        <div class="option-pill"><input type="radio" name="civil" id="cv1" value="Solteiro(a)" onchange="toggleConditional('cond-conjuge', false)"><label for="cv1">Solteiro(a)</label></div>
+        <div class="option-pill"><input type="radio" name="civil" id="cv2" value="Namorando" onchange="toggleConditional('cond-conjuge', true)"><label for="cv2">Namorando</label></div>
+        <div class="option-pill"><input type="radio" name="civil" id="cv3" value="Casado(a)" onchange="toggleConditional('cond-conjuge', true)"><label for="cv3">Casado(a)</label></div>
+        <div class="option-pill"><input type="radio" name="civil" id="cv4" value="União estável" onchange="toggleConditional('cond-conjuge', true)"><label for="cv4">União estável</label></div>
+        <div class="option-pill"><input type="radio" name="civil" id="cv5" value="Prefiro não responder" onchange="toggleConditional('cond-conjuge', false)"><label for="cv5">Prefiro não responder</label></div>
+      </div>
+      <div class="conditional" id="cond-conjuge">
+        <div class="q-label">Nome do(a) parceiro(a)</div>
+        <input type="text" id="conjuge-nome" placeholder="Ex.: Mariana" style="margin-bottom:12px">
+        <div class="q-label">Há quanto tempo estão juntos?</div>
+        <input type="text" id="conjuge-tempo" placeholder="Ex.: 3 anos, 8 meses...">
+      </div>
+      <div class="error-msg" id="err-civil">Por favor, selecione uma opção.</div>
+    </div>
+
+    <div class="q-card" id="card-filhos">
+      <div class="q-label">Você tem filhos? <span class="req">*</span></div>
+      <div class="options-grid">
+        <div class="option-pill"><input type="radio" name="filhos" id="f1" value="Não" onchange="toggleConditional('cond-filhos', false)"><label for="f1">Não</label></div>
+        <div class="option-pill"><input type="radio" name="filhos" id="f2" value="Sim" onchange="toggleConditional('cond-filhos', true)"><label for="f2">Sim</label></div>
+      </div>
+      <div class="conditional" id="cond-filhos">
+        <div class="q-label">Quantos filhos?</div>
+        <input type="text" id="filhos-qtd" placeholder="Ex.: 2" style="margin-bottom:12px">
+        <div class="q-label">Nome(s) e idade(s)</div>
+        <input type="text" id="filhos-nomes" placeholder="Ex.: Ana (5 anos), Pedro (8 anos)" style="margin-bottom:12px">
+        <div class="q-label">O que eles gostam de fazer?</div>
+        <textarea id="filhos-gostos" placeholder="Ex.: Ana adora dançar e Pedro é louco por futebol..."></textarea>
+      </div>
+      <div class="error-msg" id="err-filhos">Por favor, selecione uma opção.</div>
+    </div>
+
+    <div class="q-card" id="card-pet">
+      <div class="q-label">Você tem pet? <span class="req">*</span></div>
+      <div class="options-grid">
+        <div class="option-pill"><input type="radio" name="pet" id="p1" value="Não" onchange="toggleConditional('cond-pet', false)"><label for="p1">Não</label></div>
+        <div class="option-pill"><input type="radio" name="pet" id="p2" value="Sim" onchange="toggleConditional('cond-pet', true)"><label for="p2">Sim 🐾</label></div>
+      </div>
+      <div class="conditional" id="cond-pet">
+        <div class="q-label">Qual(is) pet(s)?</div>
+        <input type="text" id="pet-quais" placeholder="Ex.: cachorro, gato, coelho..." style="margin-bottom:12px">
+        <div class="q-label">Nome(s) do(s) pet(s)</div>
+        <input type="text" id="pet-nomes" placeholder="Ex.: Rex, Bolinha, Fifi...">
+      </div>
+      <div class="error-msg" id="err-pet">Por favor, selecione uma opção.</div>
+    </div>
+
+    <div class="q-card" id="card-horario">
+      <div class="q-label">Como é seu melhor horário de produtividade? <span class="req">*</span></div>
+      <div class="options-grid">
+        <div class="option-pill"><input type="radio" name="horario" id="h1" value="Manhã"><label for="h1">🌅 Manhã</label></div>
+        <div class="option-pill"><input type="radio" name="horario" id="h2" value="Tarde"><label for="h2">☀️ Tarde</label></div>
+        <div class="option-pill"><input type="radio" name="horario" id="h3" value="Noite"><label for="h3">🌙 Noite</label></div>
+        <div class="option-pill"><input type="radio" name="horario" id="h4" value="Varia"><label for="h4">🔀 Varia</label></div>
+        <div class="option-pill"><input type="radio" name="horario" id="h5" value="Depende do dia"><label for="h5">📅 Depende do dia</label></div>
+      </div>
+      <div class="error-msg" id="err-horario">Por favor, selecione uma opção.</div>
+    </div>
+
+    <div class="nav-buttons">
+      <button type="button" class="btn btn-back" onclick="goBack(3)">← Voltar</button>
+      <button type="button" class="btn btn-next" onclick="goNext(3)">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- SEÇÃO 4 -->
+  <div class="section" id="sec4">
+    <div class="section-header">
+      <div class="section-tag">Seção 4 / 7</div>
+      <div class="section-title">Reconhecimento e Motivação</div>
+      <div class="section-desc">Queremos entender como você gosta de ser reconhecido(a) e o que te motiva no trabalho.</div>
+    </div>
+
+    <div class="q-card" id="card-motivacao">
+      <div class="q-label">O que mais te motiva no trabalho? <span class="req">*</span></div>
+      <textarea id="motivacao" placeholder="Pode ser qualquer coisa — autonomia, impacto, aprendizado, time..."></textarea>
+      <div class="error-msg" id="err-motivacao">Por favor, preencha este campo.</div>
+    </div>
+
+    <div class="q-card" id="card-valorizado">
+      <div class="q-label">Você se sente valorizado(a) hoje? Por quê? <span class="req">*</span></div>
+      <textarea id="valorizado" placeholder="Seja honesto(a), suas respostas nos ajudam a melhorar."></textarea>
+      <div class="error-msg" id="err-valorizado">Por favor, preencha este campo.</div>
+    </div>
+
+    <div class="q-card" id="card-gas">
+      <div class="q-label">O que te ajuda a "dar o gás" quando o dia está puxado? <span class="req">*</span></div>
+      <input type="text" id="gas" placeholder="Ex.: um café, música, uma pausa rápida...">
+      <div class="error-msg" id="err-gas">Por favor, preencha este campo.</div>
+    </div>
+
+    <div class="nav-buttons">
+      <button type="button" class="btn btn-back" onclick="goBack(4)">← Voltar</button>
+      <button type="button" class="btn btn-next" onclick="goNext(4)">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- SEÇÃO 5 -->
+  <div class="section" id="sec5">
+    <div class="section-header">
+      <div class="section-tag">Seção 5 / 7</div>
+      <div class="section-title">Desenvolvimento e Futuro</div>
+      <div class="section-desc">Acreditamos no crescimento interno. Essa etapa nos ajuda a entender seus objetivos e como podemos apoiar seu desenvolvimento.</div>
+    </div>
+
+    <div class="q-card" id="card-lideranca">
+      <div class="q-label">Tem interesse em assumir novas responsabilidades ou liderança? <span class="req">*</span></div>
+      <div class="options-grid">
+        <div class="option-pill"><input type="radio" name="lideranca" id="l1" value="Sim"><label for="l1">Sim</label></div>
+        <div class="option-pill"><input type="radio" name="lideranca" id="l2" value="Talvez"><label for="l2">Talvez</label></div>
+        <div class="option-pill"><input type="radio" name="lideranca" id="l3" value="No momento não"><label for="l3">No momento não</label></div>
+      </div>
+      <div class="error-msg" id="err-lideranca">Por favor, selecione uma opção.</div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-label">Que tipo de treinamento ou desenvolvimento gostaria de receber?</div>
+      <div class="options-grid">
+        <div class="option-pill"><input type="checkbox" name="treinamento" id="tr1" value="Comunicação"><label for="tr1">🗣️ Comunicação</label></div>
+        <div class="option-pill"><input type="checkbox" name="treinamento" id="tr2" value="Liderança"><label for="tr2">🧭 Liderança</label></div>
+        <div class="option-pill"><input type="checkbox" name="treinamento" id="tr3" value="Vendas"><label for="tr3">📊 Vendas</label></div>
+        <div class="option-pill"><input type="checkbox" name="treinamento" id="tr4" value="Hard skills"><label for="tr4">⚙️ Hard skills</label></div>
+        <div class="option-pill"><input type="checkbox" name="treinamento" id="tr5" value="Ferramentas"><label for="tr5">🛠️ Ferramentas</label></div>
+        <div class="option-pill"><input type="checkbox" name="treinamento" id="tr6" value="Gestão de tempo"><label for="tr6">⏱️ Gestão de tempo</label></div>
+        <div class="option-pill"><input type="checkbox" name="treinamento" id="tr7" value="Inglês"><label for="tr7">🇺🇸 Inglês</label></div>
+        <div class="option-pill"><input type="checkbox" name="treinamento" id="tr8" value="Certificações"><label for="tr8">📜 Certificações</label></div>
+        <div class="option-pill"><input type="checkbox" name="treinamento" id="tr9" value="Outro"><label for="tr9">Outro</label></div>
+      </div>
+      <div style="margin-top:14px">
+        <div class="q-label" style="margin-bottom:8px">Tem algo específico em mente?</div>
+        <textarea id="treinamento-especifico" placeholder="Descreva um treinamento, curso ou habilidade que gostaria de desenvolver..."></textarea>
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <button type="button" class="btn btn-back" onclick="goBack(5)">← Voltar</button>
+      <button type="button" class="btn btn-next" onclick="goNext(5)">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- SEÇÃO 6 -->
+  <div class="section" id="sec6">
+    <div class="section-header">
+      <div class="section-tag">Seção 6 / 7</div>
+      <div class="section-title">Cultura e Propósito</div>
+      <div class="section-desc">Sua percepção é fundamental para evoluirmos como empresa. Aqui queremos ouvir sua visão sobre cultura e melhorias.</div>
+    </div>
+
+    <div class="q-card" id="card-permanecer">
+      <div class="q-label">O que te faz permanecer na empresa hoje? <span class="req">*</span></div>
+      <textarea id="permanecer" placeholder="Suas respostas são confidenciais e nos ajudam a melhorar."></textarea>
+      <div class="error-msg" id="err-permanecer">Por favor, preencha este campo.</div>
+    </div>
+
+    <div class="q-card" id="card-melhorar">
+      <div class="q-label">Se pudesse melhorar uma coisa na empresa, o que seria? <span class="req">*</span></div>
+      <textarea id="melhorar" placeholder="Seja honesto(a), é isso que nos ajuda a crescer juntos."></textarea>
+      <div class="error-msg" id="err-melhorar">Por favor, preencha este campo.</div>
+    </div>
+
+    <div class="q-card" id="card-sugestao">
+      <div class="q-label">Tem alguma sugestão para melhorar nosso dia a dia como time? <span class="req">*</span></div>
+      <textarea id="sugestao" placeholder="Qualquer ideia é bem-vinda!"></textarea>
+      <div class="error-msg" id="err-sugestao">Por favor, preencha este campo.</div>
+    </div>
+
+    <div class="nav-buttons">
+      <button type="button" class="btn btn-back" onclick="goBack(6)">← Voltar</button>
+      <button type="button" class="btn btn-next" onclick="goNext(6)">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- SEÇÃO 7 -->
+  <div class="section" id="sec7">
+    <div class="section-header">
+      <div class="section-tag">Seção 7 / 7</div>
+      <div class="section-title">Momentos Especiais</div>
+      <div class="section-desc">Acreditamos que histórias e momentos marcam nossa trajetória. Se quiser, compartilhe algo especial da sua vida ou da sua jornada aqui na empresa. Essa parte é completamente opcional.</div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-label">Compartilhe um momento especial da sua vida pessoal</div>
+      <textarea id="momento-pessoal" placeholder="Ex.: nascimento do filho, uma conquista importante, uma viagem marcante, algo em família…"></textarea>
+    </div>
+
+    <div class="q-card">
+      <div class="q-label">Compartilhe um momento especial que você viveu aqui na empresa</div>
+      <textarea id="momento-empresa" placeholder="Ex.: um projeto que te marcou, uma vitória do time, um aprendizado, um momento de superação…"></textarea>
+    </div>
+
+    <div class="q-card">
+      <div class="q-label">Envie algumas fotos que representem você, sua família ou momentos importantes</div>
+      <div class="q-hint">Opcional. Pode enviar mais de uma! Usaremos apenas internamente. (JPG/PNG/HEIC — máx. 10MB por foto)</div>
+      <div class="file-drop" id="fileDrop" onclick="document.getElementById('fileInput').click()" ondragover="event.preventDefault(); this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleFileDrop(event)">
+        <div class="icon">📸</div>
+        <p><strong>Clique para escolher</strong> ou arraste as imagens aqui</p>
+        <p style="margin-top:4px">JPG, PNG ou HEIC • Até 10MB por foto • Múltiplas fotos permitidas</p>
+        <div class="file-name" id="fileName"></div>
+      </div>
+      <input type="file" id="fileInput" accept=".jpg,.jpeg,.png,.heic" multiple onchange="showFileName(this)">
+    </div>
+
+    <div class="q-card">
+      <div class="q-label">Existe alguma data especial que deveríamos saber? <span class="req">*</span></div>
+      <div class="options-grid">
+        <div class="option-pill"><input type="checkbox" name="data" id="d1" value="Aniversário" onchange="toggleConditionalCheckbox('cond-d1', this)"><label for="d1">🎂 Aniversário</label></div>
+        <div class="option-pill"><input type="checkbox" name="data" id="d2" value="Casamento" onchange="toggleConditionalCheckbox('cond-d2', this)"><label for="d2">💍 Casamento</label></div>
+        <div class="option-pill"><input type="checkbox" name="data" id="d3" value="Nascimento de filho(a)" onchange="toggleConditionalCheckbox('cond-d3', this)"><label for="d3">👶 Nascimento de filho(a)</label></div>
+        <div class="option-pill"><input type="checkbox" name="data" id="d4" value="Outra" onchange="toggleConditionalCheckbox('cond-d4', this)"><label for="d4">✨ Outra</label></div>
+      </div>
+      <div class="conditional" id="cond-d1">
+        <div class="q-label">🎂 Data do seu aniversário</div>
+        <input type="text" id="data-aniversario" placeholder="Ex.: 15/08">
+      </div>
+      <div class="conditional" id="cond-d2">
+        <div class="q-label">💍 Data do casamento</div>
+        <input type="text" id="data-casamento" placeholder="Ex.: 22/06/2019">
+      </div>
+      <div class="conditional" id="cond-d3">
+        <div class="q-label">👶 Data de nascimento do(a) filho(a) — ou de cada um</div>
+        <input type="text" id="data-filho" placeholder="Ex.: Ana – 10/03/2018, Pedro – 05/11/2020">
+      </div>
+      <div class="conditional" id="cond-d4">
+        <div class="q-label">✨ Qual data e o que ela significa?</div>
+        <input type="text" id="data-outra" placeholder="Ex.: 01/07 — aniversário do meu pet Rex">
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <button type="button" class="btn btn-back" onclick="goBack(7)">← Voltar</button>
+      <button type="button" class="btn btn-submit" onclick="submitForm()">Enviar 💙</button>
+    </div>
+  </div>
+
+</form>
+
+<div id="thankyou">
+  <div class="emoji">💙</div>
+  <h2 id="thankyou-title">Obrigado!</h2>
+  <p>Isso nos ajuda muito a construir um ambiente mais humano e ações de reconhecimento com a sua cara.</p>
+</div>
+
+</div>
+
+<script>
+  let currentSection = 1;
+  const totalSections = 7;
+
+  function showSection(n) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    const sec = document.getElementById('sec' + n);
+    if (sec) sec.classList.add('active');
+    currentSection = n;
+    updateProgress(n);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function updateProgress(n) {
+    const pct = Math.round(((n - 1) / totalSections) * 100);
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('prog-current').textContent = n;
+    document.getElementById('prog-pct').textContent = pct + '% concluído';
+  }
+
+  function setError(cardId, errId, show) {
+    const card = document.getElementById(cardId);
+    const err = document.getElementById(errId);
+    if (!card || !err) return;
+    card.classList.toggle('has-error', show);
+    err.classList.toggle('show', show);
+  }
+
+  function checkText(id) { return document.getElementById(id) && document.getElementById(id).value.trim().length > 0; }
+  function checkRadio(name) { return !!document.querySelector('input[name="' + name + '"]:checked'); }
+  function checkCheckbox(name) { return !!document.querySelector('input[name="' + name + '"]:checked'); }
+  function checkSelect(id) { return document.getElementById(id) && document.getElementById(id).value !== ''; }
+
+  function validateSection1() {
+    let valid = true;
+    if (!(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((document.getElementById('email')||{value:''}).value.trim()))) { setError('card-email','err-email',true); valid=false; } else setError('card-email','err-email',false);
+    if (!checkText('nome')) { setError('card-nome','err-nome',true); valid=false; } else setError('card-nome','err-nome',false);
+    if (!checkSelect('area')) { setError('card-area','err-area',true); valid=false; } else setError('card-area','err-area',false);
+    if (!checkText('cargo')) { setError('card-cargo','err-cargo',true); valid=false; } else setError('card-cargo','err-cargo',false);
+    if (!checkRadio('tempo')) { setError('card-tempo','err-tempo',true); valid=false; } else setError('card-tempo','err-tempo',false);
+    if (!checkText('cidade')) { setError('card-cidade','err-cidade',true); valid=false; } else setError('card-cidade','err-cidade',false);
+    return valid;
+  }
+
+  function validateSection2() {
+    let valid = true;
+    if (!checkText('descricao')) { setError('card-descricao','err-descricao',true); valid=false; } else setError('card-descricao','err-descricao',false);
+    if (!checkText('hobbies')) { setError('card-hobbies','err-hobbies',true); valid=false; } else setError('card-hobbies','err-hobbies',false);
+    if (!checkCheckbox('musica')) { setError('card-musica','err-musica',true); valid=false; } else setError('card-musica','err-musica',false);
+    if (!checkText('esporte')) { setError('card-esporte','err-esporte',true); valid=false; } else setError('card-esporte','err-esporte',false);
+    if (!checkText('comida')) { setError('card-comida','err-comida',true); valid=false; } else setError('card-comida','err-comida',false);
+    if (!checkText('bebida')) { setError('card-bebida','err-bebida',true); valid=false; } else setError('card-bebida','err-bebida',false);
+    if (!checkRadio('restricao')) { setError('card-restricao','err-restricao',true); valid=false; } else setError('card-restricao','err-restricao',false);
+    if (!checkRadio('camisa')) { setError('card-camisa','err-camisa',true); valid=false; } else setError('card-camisa','err-camisa',false);
+    if (!checkCheckbox('presente')) { setError('card-presente','err-presente',true); valid=false; } else setError('card-presente','err-presente',false);
+    if (!checkText('nao-gosta')) { setError('card-nao-gosta','err-nao-gosta',true); valid=false; } else setError('card-nao-gosta','err-nao-gosta',false);
+    return valid;
+  }
+
+  function validateSection3() {
+    let valid = true;
+    if (!checkRadio('civil')) { setError('card-civil','err-civil',true); valid=false; } else setError('card-civil','err-civil',false);
+    if (!checkRadio('filhos')) { setError('card-filhos','err-filhos',true); valid=false; } else setError('card-filhos','err-filhos',false);
+    if (!checkRadio('pet')) { setError('card-pet','err-pet',true); valid=false; } else setError('card-pet','err-pet',false);
+    if (!checkRadio('horario')) { setError('card-horario','err-horario',true); valid=false; } else setError('card-horario','err-horario',false);
+    return valid;
+  }
+
+  function validateSection4() {
+    let valid = true;
+    if (!checkText('motivacao')) { setError('card-motivacao','err-motivacao',true); valid=false; } else setError('card-motivacao','err-motivacao',false);
+    if (!checkText('valorizado')) { setError('card-valorizado','err-valorizado',true); valid=false; } else setError('card-valorizado','err-valorizado',false);
+    if (!checkText('gas')) { setError('card-gas','err-gas',true); valid=false; } else setError('card-gas','err-gas',false);
+    return valid;
+  }
+
+  function validateSection5() {
+    let valid = true;
+    if (!checkRadio('lideranca')) { setError('card-lideranca','err-lideranca',true); valid=false; } else setError('card-lideranca','err-lideranca',false);
+    return valid;
+  }
+
+  function validateSection6() {
+    let valid = true;
+    if (!checkText('permanecer')) { setError('card-permanecer','err-permanecer',true); valid=false; } else setError('card-permanecer','err-permanecer',false);
+    if (!checkText('melhorar')) { setError('card-melhorar','err-melhorar',true); valid=false; } else setError('card-melhorar','err-melhorar',false);
+    if (!checkText('sugestao')) { setError('card-sugestao','err-sugestao',true); valid=false; } else setError('card-sugestao','err-sugestao',false);
+    return valid;
+  }
+
+  function goNext(from) {
+    let valid = true;
+    if (from === 1) valid = validateSection1();
+    else if (from === 2) valid = validateSection2();
+    else if (from === 3) valid = validateSection3();
+    else if (from === 4) valid = validateSection4();
+    else if (from === 5) valid = validateSection5();
+    else if (from === 6) valid = validateSection6();
+    if (!valid) {
+      const firstError = document.querySelector('.q-card.has-error');
+      if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    showSection(from + 1);
+  }
+
+  function goBack(from) { showSection(from - 1); }
+
+  function toggleConditional(id, show) {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('visible', show);
+  }
+
+  function toggleConditionalCheckbox(id, checkbox) {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('visible', checkbox.checked);
+  }
+
+  function showFileName(input) {
+    const count = input.files.length;
+    if (count === 0) { document.getElementById('fileName').textContent = ''; return; }
+    if (count === 1) { document.getElementById('fileName').textContent = '✔ ' + input.files[0].name; }
+    else { document.getElementById('fileName').textContent = '✔ ' + count + ' fotos selecionadas'; }
+  }
+
+  function handleFileDrop(event) {
+    event.preventDefault();
+    document.getElementById('fileDrop').classList.remove('drag');
+    const file = event.dataTransfer.files[0];
+    if (file) document.getElementById('fileName').textContent = '✔ ' + file.name;
+  }
+
+  const SCRIPT_URL = 'https://script.google.com/a/macros/brasilbitcoin.com.br/s/AKfycbzJbmbnX0b6qfAkaiD4b21_iC_9JJv-y44D1Rh65lTz8w_rI6hCGgAfaDxh4WOKXguJHg/exec';
+
+  function getChecked(name) {
+    return Array.from(document.querySelectorAll('input[name="' + name + '"]:checked'))
+      .map(el => el.value).join(', ');
+  }
+
+  function val(id) {
+    const el = document.getElementById(id);
+    return el ? el.value.trim() : '';
+  }
+
+  function submitForm() {
+    const nomeCompleto = val('nome');
+    const primeiroNome = nomeCompleto.split(' ')[0] || '';
+
+    const data = {
+      email:                val('email'),
+      nome:                 nomeCompleto,
+      area:                 val('area'),
+      cargo:                val('cargo'),
+      tempo:                getChecked('tempo'),
+      cidade:               val('cidade'),
+      descricao:            val('descricao'),
+      hobbies:              val('hobbies'),
+      musica:               getChecked('musica'),
+      musicaArtista:        val('musica-artista'),
+      esporte:              val('esporte'),
+      comida:               val('comida'),
+      bebida:               val('bebida'),
+      restricao:            getChecked('restricao'),
+      restricaoQuais:       val('restricao-quais'),
+      camisa:               getChecked('camisa'),
+      presente:             getChecked('presente'),
+      presenteEspecifico:   val('presente-especifico'),
+      naoGosta:             val('nao-gosta'),
+      civil:                getChecked('civil'),
+      conjugeNome:          val('conjuge-nome'),
+      conjugeTempo:         val('conjuge-tempo'),
+      filhos:               getChecked('filhos'),
+      filhosQtd:            val('filhos-qtd'),
+      filhosNomes:          val('filhos-nomes'),
+      filhosGostos:         val('filhos-gostos'),
+      pet:                  getChecked('pet'),
+      petQuais:             val('pet-quais'),
+      petNomes:             val('pet-nomes'),
+      horario:              getChecked('horario'),
+      motivacao:            val('motivacao'),
+      valorizado:           val('valorizado'),
+      gas:                  val('gas'),
+      lideranca:            getChecked('lideranca'),
+      treinamento:          getChecked('treinamento'),
+      treinamentoEspecifico:val('treinamento-especifico'),
+      permanecer:           val('permanecer'),
+      melhorar:             val('melhorar'),
+      sugestao:             val('sugestao'),
+      momentoPessoal:       val('momento-pessoal'),
+      momentoEmpresa:       val('momento-empresa'),
+      datasEspeciais:       getChecked('data'),
+      dataAniversario:      val('data-aniversario'),
+      dataCasamento:        val('data-casamento'),
+      dataFilho:            val('data-filho'),
+      dataOutra:            val('data-outra'),
+    };
+
+    // Mostrar tela de agradecimento imediatamente (UX)
+    const titulo = document.getElementById('thankyou-title');
+    titulo.textContent = primeiroNome ? 'Obrigado, ' + primeiroNome + '!' : 'Obrigado!';
+    document.getElementById('sec7').classList.remove('active');
+    document.getElementById('thankyou').classList.add('active');
+    document.getElementById('progress-fill').style.width = '100%';
+    document.getElementById('prog-current').textContent = '✓';
+    document.getElementById('prog-pct').textContent = '100% concluído';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Enviar dados para o Google Sheets em background
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).catch(err => console.warn('Erro ao enviar dados:', err));
+  }
+
+  updateProgress(1);
+</script>
+</body>
+</html>
