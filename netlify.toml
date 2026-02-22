@@ -1,0 +1,7 @@
+[[redirects]]
+  from = "/api/submit"
+  to = "https://script.google.com/a/macros/brasilbitcoin.com.br/s/AKfycbzJbmbnX0b6qfAkaiD4b21_iC_9JJv-y44D1Rh65lTz8w_rI6hCGgAfaDxh4WOKXguJHg/exec"
+  status = 200
+  force = true
+  [redirects.headers]
+    Access-Control-Allow-Origin = "*"
