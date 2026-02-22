@@ -998,11 +998,12 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     // Enviar dados para o Google Sheets em background
-    fetch(SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+  const formData = new FormData();
+formData.append('payload', JSON.stringify(data));
+fetch(SCRIPT_URL, {
+  method: 'POST',
+  mode: 'no-cors',
+  body: formData
     }).catch(err => console.warn('Erro ao enviar dados:', err));
   }
 
