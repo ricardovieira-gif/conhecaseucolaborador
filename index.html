@@ -922,7 +922,7 @@
     if (file) document.getElementById('fileName').textContent = '✔ ' + file.name;
   }
 
-const SCRIPT_URL = '/api/submit';
+const SCRIPT_URL = '/.netlify/functions/submit';
   
   function getChecked(name) {
     return Array.from(document.querySelectorAll('input[name="' + name + '"]:checked'))
