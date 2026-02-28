@@ -922,7 +922,8 @@
     if (file) document.getElementById('fileName').textContent = '✔ ' + file.name;
   }
 
-const SCRIPT_URL = https://script.google.com/macros/s/AKfycbzJbmbnX0b6qfAkaiD4b21_iC_9JJv-y44D1Rh65lTz8w_rI6hCGgAfaDxh4WOKXguJHg/exec
+const SUPABASE_URL = 'https://cxauptpngygewxlcgatt.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4YXVwdHBuZ3lnZXd4bGNnYXR0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA0OTczODMsImV4cCI6MjA4NjA3MzM4M30.g3U18WQ1yIacc6mFGkhmRUosC7gHPfttcDSMaBS7d5I';
   
   function getChecked(name) {
     return Array.from(document.querySelectorAll('input[name="' + name + '"]:checked'))
@@ -997,12 +998,62 @@ const SCRIPT_URL = https://script.google.com/macros/s/AKfycbzJbmbnX0b6qfAkaiD4b2
     document.getElementById('prog-pct').textContent = '100% concluído';
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-// Enviar dados para o Google Sheets em background
-    fetch(SCRIPT_URL, {
+// Enviar dados para o Supabase em background
+    const payload = {
+      email:                   data.email,
+      nome_completo:           data.nome,
+      area:                    data.area,
+      cargo:                   data.cargo,
+      tempo_empresa:           data.tempo,
+      endereco:                data.cidade,
+      descricao_pessoal:       data.descricao,
+      hobbies:                 data.hobbies,
+      estilos_musica:          data.musica ? data.musica.split(', ') : [],
+      cantor_favorito:         data.musicaArtista,
+      esportes_time:           data.esporte,
+      comida_preferida:        data.comida,
+      bebida_preferida:        data.bebida,
+      restricao_alimentar:     data.restricao === 'Sim' ? data.restricaoQuais : data.restricao,
+      tamanho_camiseta:        data.camisa,
+      preferencias_presente:   data.presente ? data.presente.split(', ') : [],
+      presente_especifico:     data.presenteEspecifico,
+      nao_gosta_ganhar:        data.naoGosta,
+      estado_civil:            data.civil,
+      nome_parceiro:           data.conjugeNome,
+      tempo_juntos:            data.conjugeTempo,
+      tem_filhos:              data.filhos === 'Sim',
+      qtd_filhos:              data.filhosQtd ? parseInt(data.filhosQtd) : null,
+      nomes_idades_filhos:     data.filhosNomes,
+      filhos_gostam:           data.filhosGostos,
+      tem_pet:                 data.pet === 'Sim 🐾',
+      tipo_pet:                data.petQuais,
+      nome_pet:                data.petNomes,
+      horario_produtividade:   data.horario,
+      o_que_motiva:            data.motivacao,
+      sente_valorizado:        data.valorizado,
+      o_que_da_gas:            data.gas,
+      interesse_lideranca:     data.lideranca,
+      tipos_treinamento:       data.treinamento ? data.treinamento.split(', ') : [],
+      treinamento_especifico:  data.treinamentoEspecifico,
+      o_que_faz_permanecer:    data.permanecer,
+      melhorar_empresa:        data.melhorar,
+      sugestao_time:           data.sugestao,
+      momento_pessoal:         data.momentoPessoal,
+      momento_empresa:         data.momentoEmpresa,
+      datas_especiais:         data.datasEspeciais ? data.datasEspeciais.split(', ') : [],
+      detalhe_datas:           [data.dataAniversario, data.dataCasamento, data.dataFilho, data.dataOutra].filter(Boolean).join(' | ')
+    };
+
+    fetch(SUPABASE_URL + '/rest/v1/brasil_bitcoin_respostas', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    }).catch(err => console.warn('Erro:', err));
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY,
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(payload)
+    }).catch(err => console.warn('Erro ao salvar no Supabase:', err));
   }
 
   updateProgress(1);
