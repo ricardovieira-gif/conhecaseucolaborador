@@ -1044,6 +1044,17 @@ const SUPABASE_URL = 'https://cxauptpngygewxlcgatt.supabase.co';
       detalhe_datas:           [data.dataAniversario, data.dataCasamento, data.dataFilho, data.dataOutra].filter(Boolean).join(' | ')
     };
 
+    // Enviar e-mail automático para o RH
+    fetch(SUPABASE_URL + '/functions/v1/notify-rh', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY,
+      },
+      body: JSON.stringify(payload)
+    }).catch(err => console.warn('Erro ao enviar e-mail:', err));
+
     fetch(SUPABASE_URL + '/rest/v1/brasil_bitcoin_respostas', {
       method: 'POST',
       headers: {
