@@ -8,13 +8,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
 :root{
-  --dark:#07080F;--card:#0E1017;--card2:#12141E;
+  --dark:#07080F;--card:#0E1017;--card2:#12141E;--card3:#161923;
   --border:rgba(255,255,255,.06);--muted:rgba(255,255,255,.35);
   --text:rgba(255,255,255,.88);--blue:#3B6FFF;--yellow:#F5C842;
-  --green:#2DD4A0;--red:#F0506E;--purple:#9B6DFF;
+  --green:#2DD4A0;--red:#F0506E;--purple:#9B6DFF;--orange:#F97316;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--dark);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;min-height:100vh;}
+
+/* LOGIN */
 #login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;
   background:radial-gradient(ellipse 80% 60% at 20% 60%,rgba(59,111,255,.1) 0%,transparent 60%),var(--dark);}
 .lb{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:52px 44px;width:100%;max-width:380px;text-align:center;}
@@ -26,139 +28,211 @@ body{background:var(--dark);color:var(--text);font-family:'DM Sans',sans-serif;f
 .lb-btn{width:100%;background:var(--blue);color:white;border:none;border-radius:12px;padding:13px;font-size:14px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;margin-top:6px;}
 .lb-btn:hover{opacity:.85;}
 .lb-err{color:var(--red);font-size:13px;margin-top:10px;display:none;}
+
+/* LAYOUT */
 #dashboard{display:none;}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 36px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(7,8,15,.96);backdrop-filter:blur(16px);z-index:200;}
-.tb-left{display:flex;align-items:center;gap:20px;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(7,8,15,.97);backdrop-filter:blur(16px);z-index:300;}
+.tb-left{display:flex;align-items:center;gap:16px;}
 .tb-brand{font-size:11px;font-weight:500;letter-spacing:.25em;text-transform:uppercase;color:var(--blue);opacity:.8;}
-.tb-title{font-family:'Fraunces',serif;font-size:16px;font-weight:700;}
+.tb-title{font-family:'Fraunces',serif;font-size:15px;font-weight:700;}
 .tb-right{display:flex;align-items:center;gap:10px;}
+.sync-badge{font-size:11px;color:var(--green);background:rgba(45,212,160,.1);border:1px solid rgba(45,212,160,.2);border-radius:20px;padding:3px 10px;cursor:pointer;}
 .tb-time{font-size:12px;color:var(--muted);}
-.sync-badge{font-size:11px;color:var(--green);background:rgba(45,212,160,.1);border:1px solid rgba(45,212,160,.2);border-radius:20px;padding:3px 10px;}
 .out-btn{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:6px 14px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;}
 .out-btn:hover{border-color:rgba(255,255,255,.3);color:white;}
-.tabs{display:flex;gap:2px;padding:0 36px;border-bottom:1px solid var(--border);background:var(--dark);}
-.tab{padding:14px 22px;font-size:13px;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);transition:all .2s;}
+
+/* FILTER BAR */
+.filter-bar{display:flex;align-items:center;gap:10px;padding:10px 32px;border-bottom:1px solid var(--border);background:rgba(7,8,15,.95);flex-wrap:wrap;}
+.filter-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;}
+.filter-select{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;padding:6px 12px;color:var(--text);font-size:12px;font-family:'DM Sans',sans-serif;outline:none;cursor:pointer;}
+.filter-select:focus{border-color:var(--blue);}
+.filter-chip{background:rgba(59,111,255,.12);border:1px solid rgba(59,111,255,.2);color:#7ba3ff;border-radius:20px;padding:4px 12px;font-size:11px;cursor:pointer;}
+.filter-chip.active{background:var(--blue);color:white;border-color:var(--blue);}
+.filter-reset{font-size:11px;color:var(--muted);cursor:pointer;text-decoration:underline;margin-left:4px;}
+.filter-reset:hover{color:white;}
+
+/* TABS */
+.tabs{display:flex;gap:0;padding:0 32px;border-bottom:1px solid var(--border);background:var(--dark);overflow-x:auto;}
+.tabs::-webkit-scrollbar{height:2px;}
+.tabs::-webkit-scrollbar-thumb{background:var(--blue);}
+.tab{padding:13px 18px;font-size:12px;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);transition:all .2s;white-space:nowrap;}
 .tab.active{color:white;border-bottom-color:var(--blue);}
-.main{padding:28px 36px;max-width:1440px;margin:0 auto;}
-.stats-row{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:24px;}
-.sc{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px 18px;position:relative;overflow:hidden;cursor:pointer;transition:border-color .2s,transform .15s;}
+.tab:hover:not(.active){color:rgba(255,255,255,.6);}
+
+.main{padding:24px 32px;max-width:1440px;margin:0 auto;}
+.tab-pane{display:none;}
+.tab-pane.active{display:block;}
+
+/* INSIGHT ALERTS */
+.alerts-row{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;}
+.alert-card{flex:1;min-width:220px;border-radius:12px;padding:14px 16px;display:flex;align-items:flex-start;gap:10px;border:1px solid;}
+.alert-card.info{background:rgba(59,111,255,.08);border-color:rgba(59,111,255,.2);}
+.alert-card.warn{background:rgba(245,200,66,.07);border-color:rgba(245,200,66,.2);}
+.alert-card.success{background:rgba(45,212,160,.07);border-color:rgba(45,212,160,.2);}
+.alert-card.danger{background:rgba(240,80,110,.07);border-color:rgba(240,80,110,.2);}
+.alert-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.alert-title{font-size:12px;font-weight:500;margin-bottom:3px;}
+.alert-txt{font-size:11px;color:var(--muted);line-height:1.5;}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:20px;}
+.sc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 16px;position:relative;overflow:hidden;cursor:pointer;transition:border-color .2s,transform .15s;}
 .sc:hover{border-color:rgba(255,255,255,.15);transform:translateY(-1px);}
-.sc-icon{font-size:20px;margin-bottom:10px;}
-.sc-val{font-family:'Fraunces',serif;font-size:32px;font-weight:900;line-height:1;}
-.sc-label{font-size:11px;color:var(--muted);margin-top:6px;}
-.sc-hint{font-size:10px;color:var(--blue);margin-top:4px;opacity:.7;}
-.sc-bar{position:absolute;bottom:0;left:0;height:2px;background:var(--blue);}
-.sc-bar.yellow{background:var(--yellow);}
-.sc-bar.green{background:var(--green);}
-.sc-bar.purple{background:var(--purple);}
-.sc-bar.red{background:var(--red);}
-.aniv-card{background:linear-gradient(135deg,rgba(59,111,255,.1) 0%,rgba(155,109,255,.05) 100%);border:1px solid rgba(59,111,255,.18);border-radius:16px;padding:20px;margin-bottom:24px;}
-.aniv-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
-.aniv-title{font-family:'Fraunces',serif;font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px;}
+.sc-icon{font-size:18px;margin-bottom:8px;}
+.sc-val{font-family:'Fraunces',serif;font-size:30px;font-weight:900;line-height:1;}
+.sc-label{font-size:10px;color:var(--muted);margin-top:5px;letter-spacing:.02em;}
+.sc-hint{font-size:9px;color:var(--blue);margin-top:3px;opacity:.7;}
+.sc-bar{position:absolute;bottom:0;left:0;height:2px;}
+.bar-blue{background:var(--blue);}
+.bar-yellow{background:var(--yellow);}
+.bar-green{background:var(--green);}
+.bar-purple{background:var(--purple);}
+.bar-red{background:var(--red);}
+.bar-orange{background:var(--orange);}
+
+/* ANIVERSÁRIOS */
+.aniv-card{background:linear-gradient(135deg,rgba(59,111,255,.1) 0%,rgba(155,109,255,.05) 100%);border:1px solid rgba(59,111,255,.18);border-radius:14px;padding:18px;margin-bottom:20px;}
+.aniv-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.aniv-title{font-family:'Fraunces',serif;font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;}
 .aniv-badge{background:var(--blue);color:white;border-radius:20px;padding:2px 10px;font-size:11px;}
 .aniv-list{display:flex;flex-wrap:wrap;gap:10px;}
-.aniv-item{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:12px;}
-.aniv-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:14px;font-weight:700;flex-shrink:0;}
-.aniv-nome{font-size:13px;font-weight:500;}
-.aniv-data{font-size:11px;color:var(--muted);margin-top:2px;}
-.aniv-dias{font-size:11px;color:var(--yellow);margin-top:1px;}
-.cg{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px;}
-.cg2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
-.cc{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;}
-.cc-title{font-size:11px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
-.cc-sub{font-family:'Fraunces',serif;font-size:16px;font-weight:700;margin-bottom:18px;}
-/* INSIGHT BARS HORIZONTAL */
-.ilist{display:flex;flex-direction:column;gap:11px;}
-.irow{display:flex;align-items:center;gap:10px;}
-.ilabel{min-width:130px;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.ibar-wrap{flex:1;background:rgba(255,255,255,.05);border-radius:3px;height:7px;}
-.ibar{height:7px;border-radius:3px;background:var(--blue);transition:width .8s cubic-bezier(.4,0,.2,1);}
-.inum{font-size:12px;font-weight:500;min-width:24px;text-align:right;}
-.ipct{font-size:11px;color:var(--muted);min-width:36px;text-align:right;}
-.triple{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;}
-.triple-item{text-align:center;padding:16px 12px;border-right:1px solid var(--border);}
-.triple-item:last-child{border-right:none;}
-.triple-val{font-family:'Fraunces',serif;font-size:28px;font-weight:900;}
-.triple-pct{font-size:11px;color:var(--muted);margin-top:2px;}
-.triple-label{font-size:11px;color:var(--muted);margin-top:6px;}
-.search-row{display:flex;gap:10px;margin-bottom:16px;align-items:center;}
-.search-inp{flex:1;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:10px 16px;color:white;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;}
-.search-inp:focus{border-color:var(--blue);}
+.aniv-item{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:10px;}
+.aniv-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:13px;font-weight:700;flex-shrink:0;}
+.aniv-nome{font-size:12px;font-weight:500;}
+.aniv-data{font-size:10px;color:var(--muted);margin-top:1px;}
+.aniv-dias{font-size:10px;color:var(--yellow);margin-top:1px;}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px;}
+.g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;margin-bottom:14px;}
+.g12{display:grid;grid-template-columns:1fr 2fr;gap:14px;margin-bottom:14px;}
+.g21{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px;}
+.span2{grid-column:span 2;}
+.span3{grid-column:span 3;}
+
+.cc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:14px;}
+.cc-title{font-size:10px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px;}
+.cc-sub{font-family:'Fraunces',serif;font-size:15px;font-weight:700;margin-bottom:16px;}
+.cc-0{color:var(--muted);font-size:12px;font-style:italic;padding:20px 0;text-align:center;}
+
+/* INSIGHT BARS */
+.ilist{display:flex;flex-direction:column;gap:10px;}
+.irow{display:flex;align-items:center;gap:8px;}
+.ilabel{min-width:120px;font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ibar-wrap{flex:1;background:rgba(255,255,255,.05);border-radius:3px;height:6px;}
+.ibar{height:6px;border-radius:3px;background:var(--blue);transition:width .8s;}
+.inum{font-size:11px;font-weight:500;min-width:20px;text-align:right;}
+.ipct{font-size:10px;color:var(--muted);min-width:34px;text-align:right;}
+
+/* TABELA */
 .tw{overflow-x:auto;}
 table{width:100%;border-collapse:collapse;}
-th{text-align:left;padding:9px 14px;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);border-bottom:1px solid var(--border);white-space:nowrap;font-weight:400;}
-td{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle;}
+th{text-align:left;padding:8px 12px;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);border-bottom:1px solid var(--border);white-space:nowrap;font-weight:400;}
+td{padding:11px 12px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle;font-size:13px;}
 tr:last-child td{border-bottom:none;}
 tr:hover td{background:rgba(255,255,255,.015);}
-.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;white-space:nowrap;}
-.badge-blue{background:rgba(59,111,255,.12);color:#7ba3ff;border:1px solid rgba(59,111,255,.2);}
-.badge-yellow{background:rgba(245,200,66,.1);color:#f5c842;border:1px solid rgba(245,200,66,.2);}
-.badge-red{background:rgba(240,80,110,.1);color:#f0506e;border:1px solid rgba(240,80,110,.2);}
-.badge-green{background:rgba(45,212,160,.1);color:#2dd4a0;border:1px solid rgba(45,212,160,.2);}
-.btn-sm{border:1px solid var(--border);border-radius:7px;padding:5px 11px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;background:transparent;}
-.btn-ver{color:var(--muted);}
-.btn-ver:hover{border-color:var(--blue);color:white;}
-.btn-del{color:var(--muted);margin-left:4px;}
-.btn-del:hover{border-color:var(--red);color:var(--red);}
-.ra-list{display:flex;flex-direction:column;gap:8px;max-height:280px;overflow-y:auto;padding-right:4px;}
+.badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10px;white-space:nowrap;}
+.b-blue{background:rgba(59,111,255,.12);color:#7ba3ff;border:1px solid rgba(59,111,255,.2);}
+.b-yellow{background:rgba(245,200,66,.1);color:#f5c842;border:1px solid rgba(245,200,66,.2);}
+.b-red{background:rgba(240,80,110,.1);color:#f0506e;border:1px solid rgba(240,80,110,.2);}
+.b-green{background:rgba(45,212,160,.1);color:#2dd4a0;border:1px solid rgba(45,212,160,.2);}
+.b-purple{background:rgba(155,109,255,.1);color:#b48fff;border:1px solid rgba(155,109,255,.2);}
+
+.btn-sm{border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;background:transparent;color:var(--muted);}
+.btn-sm:hover{border-color:var(--blue);color:white;}
+.btn-del:hover{border-color:var(--red)!important;color:var(--red)!important;}
+
+.search-inp{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:9px 14px;color:white;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:14px;}
+.search-inp:focus{border-color:var(--blue);}
+
+/* TEXTO ABERTO */
+.ra-list{display:flex;flex-direction:column;gap:8px;max-height:260px;overflow-y:auto;padding-right:4px;}
 .ra-list::-webkit-scrollbar{width:3px;}
 .ra-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:3px;}
-.ra-item{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:12px 14px;}
-.ra-autor{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px;}
-.ra-txt{font-size:13px;line-height:1.6;}
+.ra-item{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:11px 14px;}
+.ra-autor{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;}
+.ra-txt{font-size:12px;line-height:1.6;}
+
+/* CALENDÁRIO DATAS */
+.cal-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.cal-item{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;}
+.cal-mes{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;}
+.cal-val{font-family:'Fraunces',serif;font-size:24px;font-weight:900;}
+.cal-tipo{font-size:10px;color:var(--blue);margin-top:3px;}
+
+/* COMPARATIVO TABLE */
+.comp-table{width:100%;border-collapse:collapse;font-size:12px;}
+.comp-table th{padding:8px 10px;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border-bottom:1px solid var(--border);text-align:left;font-weight:400;}
+.comp-table td{padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.04);}
+.comp-table tr:last-child td{border-bottom:none;}
+.mini-bar-wrap{width:80px;height:5px;background:rgba(255,255,255,.06);border-radius:3px;display:inline-block;vertical-align:middle;margin-left:6px;}
+.mini-bar{height:5px;border-radius:3px;background:var(--blue);}
+
+/* TRIPLE */
+.triple{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;}
+.triple-item{text-align:center;padding:14px 10px;border-right:1px solid var(--border);}
+.triple-item:last-child{border-right:none;}
+.triple-val{font-family:'Fraunces',serif;font-size:26px;font-weight:900;}
+.triple-pct{font-size:10px;color:var(--muted);margin-top:2px;}
+.triple-label{font-size:10px;color:var(--muted);margin-top:5px;}
+
 /* MODAL FICHA */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(8px);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;}
 .modal-overlay.open{display:flex;}
-.modal{background:var(--card2);border:1px solid var(--border);border-radius:22px;width:100%;max-width:780px;max-height:92vh;overflow-y:auto;}
+.modal{background:var(--card2);border:1px solid var(--border);border-radius:20px;width:100%;max-width:760px;max-height:90vh;overflow-y:auto;}
 .modal::-webkit-scrollbar{width:3px;}
 .modal::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:3px;}
-.mh{padding:24px 30px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;position:sticky;top:0;background:var(--card2);z-index:10;}
-.mh h2{font-family:'Fraunces',serif;font-size:22px;font-weight:900;}
-.mh .msub{color:var(--muted);font-size:12px;margin-top:4px;}
-.mclose{background:none;border:1px solid var(--border);border-radius:8px;width:32px;height:32px;color:var(--muted);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.mh{padding:20px 26px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;position:sticky;top:0;background:var(--card2);z-index:10;}
+.mh h2{font-family:'Fraunces',serif;font-size:20px;font-weight:900;}
+.mh .msub{color:var(--muted);font-size:11px;margin-top:3px;}
+.mclose{background:none;border:1px solid var(--border);border-radius:7px;width:30px;height:30px;color:var(--muted);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .mclose:hover{border-color:rgba(255,255,255,.3);color:white;}
-.mbody{padding:24px 30px;}
-.msec{margin-bottom:26px;}
-.msec h3{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.15em;color:var(--blue);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);opacity:.8;}
+.mbody{padding:20px 26px;}
+.msec{margin-bottom:22px;}
+.msec h3{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.15em;color:var(--blue);margin-bottom:12px;padding-bottom:7px;border-bottom:1px solid var(--border);opacity:.8;}
 .mgrid{display:grid;grid-template-columns:1fr 1fr;gap:0;}
-.mr{padding:9px 0;border-bottom:1px solid rgba(255,255,255,.03);}
-.mr-full{grid-column:1/-1;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.03);}
-.mr .lbl,.mr-full .lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;}
-.mr .val,.mr-full .val{font-size:13px;line-height:1.6;}
+.mr{padding:8px 0;border-bottom:1px solid rgba(255,255,255,.03);}
+.mr-full{grid-column:1/-1;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.03);}
+.mr .lbl,.mr-full .lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;}
+.mr .val,.mr-full .val{font-size:12px;line-height:1.6;}
 .val-alert{color:var(--red);}
-.foto-grid{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;}
-.foto-item img{width:110px;height:110px;object-fit:cover;border-radius:10px;border:1px solid var(--border);display:block;}
-.foto-dl{display:block;text-align:center;font-size:10px;color:var(--blue);margin-top:4px;text-decoration:none;}
-/* MODAL CARD (drill-down) */
-.card-modal{background:var(--card2);border:1px solid var(--border);border-radius:22px;width:100%;max-width:640px;max-height:85vh;overflow-y:auto;}
+.foto-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
+.foto-item img{width:100px;height:100px;object-fit:cover;border-radius:8px;border:1px solid var(--border);}
+.foto-dl{display:block;text-align:center;font-size:10px;color:var(--blue);margin-top:3px;text-decoration:none;}
+
+/* CARD MODAL */
+.card-modal{background:var(--card2);border:1px solid var(--border);border-radius:20px;width:100%;max-width:600px;max-height:82vh;overflow-y:auto;}
 .card-modal::-webkit-scrollbar{width:3px;}
 .card-modal::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:3px;}
-.cm-header{padding:22px 28px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--card2);}
-.cm-title{font-family:'Fraunces',serif;font-size:18px;font-weight:900;}
-.cm-body{padding:20px 28px;}
-.cm-item{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:10px;}
-.cm-nome{font-size:13px;font-weight:500;margin-bottom:6px;}
-.cm-detalhe{font-size:12px;color:var(--muted);line-height:1.6;}
+.cm-header{padding:20px 26px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--card2);}
+.cm-title{font-family:'Fraunces',serif;font-size:17px;font-weight:900;}
+.cm-body{padding:18px 26px;}
+.cm-item{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:9px;}
+.cm-nome{font-size:12px;font-weight:500;margin-bottom:4px;}
+.cm-detalhe{font-size:11px;color:var(--muted);line-height:1.6;}
+
 /* CONFIRM */
 .confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);backdrop-filter:blur(8px);z-index:2000;display:none;align-items:center;justify-content:center;}
 .confirm-overlay.open{display:flex;}
-.confirm-box{background:var(--card2);border:1px solid rgba(240,80,110,.2);border-radius:18px;padding:36px;width:100%;max-width:380px;text-align:center;}
-.confirm-icon{font-size:36px;margin-bottom:16px;}
-.confirm-box h3{font-family:'Fraunces',serif;font-size:20px;font-weight:900;margin-bottom:8px;}
-.confirm-box p{color:var(--muted);font-size:13px;margin-bottom:28px;line-height:1.6;}
-.confirm-btns{display:flex;gap:10px;}
-.confirm-cancel{flex:1;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:10px;padding:12px;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;}
-.confirm-cancel:hover{border-color:rgba(255,255,255,.3);color:white;}
-.confirm-del{flex:1;background:var(--red);color:white;border:none;border-radius:10px;padding:12px;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.confirm-box{background:var(--card2);border:1px solid rgba(240,80,110,.2);border-radius:16px;padding:32px;width:100%;max-width:360px;text-align:center;}
+.confirm-icon{font-size:32px;margin-bottom:14px;}
+.confirm-box h3{font-family:'Fraunces',serif;font-size:18px;font-weight:900;margin-bottom:7px;}
+.confirm-box p{color:var(--muted);font-size:12px;margin-bottom:24px;line-height:1.6;}
+.confirm-btns{display:flex;gap:8px;}
+.c-cancel{flex:1;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:9px;padding:11px;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.c-del{flex:1;background:var(--red);color:white;border:none;border-radius:9px;padding:11px;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;}
+
 .loading{text-align:center;padding:80px;color:var(--muted);}
-.tab-pane{display:none;}
-.tab-pane.active{display:block;}
-@media(max-width:1100px){.stats-row{grid-template-columns:repeat(3,1fr);}.cg{grid-template-columns:1fr 1fr;}}
-@media(max-width:720px){.stats-row{grid-template-columns:1fr 1fr;}.cg,.cg2{grid-template-columns:1fr;}.main{padding:16px;}.mgrid{grid-template-columns:1fr;}}
+.section-title{font-family:'Fraunces',serif;font-size:18px;font-weight:900;margin-bottom:16px;letter-spacing:-.01em;}
+
+@media(max-width:1100px){.stats-row{grid-template-columns:repeat(3,1fr);}.g3,.g4{grid-template-columns:1fr 1fr;}.g12,.g21{grid-template-columns:1fr;}}
+@media(max-width:720px){.stats-row{grid-template-columns:1fr 1fr;}.g2,.g3,.g4,.g12,.g21{grid-template-columns:1fr;}.main{padding:14px;}.mgrid{grid-template-columns:1fr;}.tabs{padding:0 14px;}}
 </style>
 </head>
 <body>
 
+<!-- LOGIN -->
 <div id="login-screen">
   <div class="lb">
     <div class="lb-brand">Brasil Bitcoin</div>
@@ -171,86 +245,267 @@ tr:hover td{background:rgba(255,255,255,.015);}
   </div>
 </div>
 
+<!-- DASHBOARD -->
 <div id="dashboard">
   <div class="topbar">
     <div class="tb-left">
       <div class="tb-brand">Brasil Bitcoin</div>
-      <div class="tb-title">Dashboard RH</div>
+      <div class="tb-title">People Analytics</div>
     </div>
     <div class="tb-right">
-      <div class="sync-badge" id="sync-badge">● Ao vivo</div>
+      <div class="sync-badge" id="sync-badge" onclick="load(true)" title="Clique para atualizar">● Ao vivo</div>
       <div class="tb-time" id="relogio"></div>
       <button class="out-btn" onclick="doLogout()">Sair</button>
     </div>
   </div>
-  <div class="tabs">
-    <div class="tab active" onclick="showTab('visao')">Visão Geral</div>
-    <div class="tab" onclick="showTab('colaboradores')">Colaboradores</div>
-    <div class="tab" onclick="showTab('wellbeing')">Bem-estar & Cultura</div>
+
+  <!-- FILTROS GLOBAIS -->
+  <div class="filter-bar">
+    <span class="filter-label">Filtrar:</span>
+    <select class="filter-select" id="f-area" onchange="applyFilters()">
+      <option value="">Todas as áreas</option>
+      <option>Operações</option><option>Comercial</option><option>Tech</option>
+      <option>Produto</option><option>Marketing</option><option>Financeiro</option>
+      <option>Compliance</option><option>Atendimento</option><option>People/RH</option><option>Outro</option>
+    </select>
+    <select class="filter-select" id="f-tempo" onchange="applyFilters()">
+      <option value="">Todo tempo de casa</option>
+      <option>0–3 meses</option><option>3–6 meses</option><option>6–12 meses</option>
+      <option>1–2 anos</option><option>2–4 anos</option><option>4+ anos</option>
+    </select>
+    <span class="filter-reset" onclick="resetFilters()">Limpar filtros</span>
+    <span style="font-size:11px;color:var(--muted);margin-left:auto" id="filter-info"></span>
   </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('visao')">📊 Visão Geral</div>
+    <div class="tab" onclick="showTab('comparativos')">🔀 Comparativos</div>
+    <div class="tab" onclick="showTab('motivacao')">💛 Motivação</div>
+    <div class="tab" onclick="showTab('desenvolvimento')">🚀 Desenvolvimento</div>
+    <div class="tab" onclick="showTab('cultura')">🏢 Cultura</div>
+    <div class="tab" onclick="showTab('datas')">📅 Datas & Ações</div>
+    <div class="tab" onclick="showTab('colaboradores')">👥 Colaboradores</div>
+  </div>
+
   <div class="main">
     <div id="loading" class="loading">Carregando dados...</div>
     <div id="content" style="display:none">
 
+      <!-- P1: VISÃO GERAL -->
       <div id="tab-visao" class="tab-pane active">
+        <div id="alerts-container" class="alerts-row"></div>
         <div class="stats-row">
-          <div class="sc" onclick="openCardModal('total')">
-            <div class="sc-icon">👥</div><div class="sc-val" id="s-total">—</div>
-            <div class="sc-label">Colaboradores</div><div class="sc-hint">Clique para ver todos</div>
-            <div class="sc-bar" style="width:100%"></div>
-          </div>
-          <div class="sc" onclick="openCardModal('area')">
-            <div class="sc-icon">🏢</div><div class="sc-val" style="font-size:20px" id="s-area">—</div>
-            <div class="sc-label" id="s-area-n">área líder</div><div class="sc-hint">Clique para ver por área</div>
-            <div class="sc-bar yellow" style="width:100%"></div>
-          </div>
-          <div class="sc" onclick="openCardModal('filhos')">
-            <div class="sc-icon">👶</div><div class="sc-val" id="s-filhos">—</div>
-            <div class="sc-label">Com filhos</div><div class="sc-hint">Clique para ver quem</div>
-            <div class="sc-bar green" style="width:100%"></div>
-          </div>
-          <div class="sc" onclick="openCardModal('pet')">
-            <div class="sc-icon">🐾</div><div class="sc-val" id="s-pet">—</div>
-            <div class="sc-label">Com pet</div><div class="sc-hint">Clique para ver quem</div>
-            <div class="sc-bar purple" style="width:100%"></div>
-          </div>
-          <div class="sc" onclick="openCardModal('restricao')">
-            <div class="sc-icon">⚠️</div><div class="sc-val" id="s-restricao">—</div>
-            <div class="sc-label">Restrição alim.</div><div class="sc-hint">Clique para ver quem</div>
-            <div class="sc-bar red" style="width:100%"></div>
-          </div>
-          <div class="sc" onclick="openCardModal('lider')">
-            <div class="sc-icon">🚀</div><div class="sc-val" id="s-lider">—</div>
-            <div class="sc-label">Interesse liderança</div><div class="sc-hint">Clique para ver quem</div>
-            <div class="sc-bar" style="width:100%"></div>
-          </div>
+          <div class="sc" onclick="openCardModal('total')"><div class="sc-icon">👥</div><div class="sc-val" id="s-total">—</div><div class="sc-label">Colaboradores</div><div class="sc-hint">Ver todos →</div><div class="sc-bar bar-blue" style="width:100%"></div></div>
+          <div class="sc" onclick="openCardModal('area')"><div class="sc-icon">🏢</div><div class="sc-val" style="font-size:18px" id="s-area">—</div><div class="sc-label" id="s-area-n">Área líder</div><div class="sc-hint">Ver por área →</div><div class="sc-bar bar-yellow" style="width:100%"></div></div>
+          <div class="sc" onclick="openCardModal('filhos')"><div class="sc-icon">👶</div><div class="sc-val" id="s-filhos">—</div><div class="sc-label">Com filhos</div><div class="sc-hint">Ver quem →</div><div class="sc-bar bar-green" style="width:100%"></div></div>
+          <div class="sc" onclick="openCardModal('pet')"><div class="sc-icon">🐾</div><div class="sc-val" id="s-pet">—</div><div class="sc-label">Com pet</div><div class="sc-hint">Ver quem →</div><div class="sc-bar bar-purple" style="width:100%"></div></div>
+          <div class="sc" onclick="openCardModal('restricao')"><div class="sc-icon">⚠️</div><div class="sc-val" id="s-restricao">—</div><div class="sc-label">Restrição alim.</div><div class="sc-hint">Ver quem →</div><div class="sc-bar bar-red" style="width:100%"></div></div>
+          <div class="sc" onclick="openCardModal('lider')"><div class="sc-icon">🚀</div><div class="sc-val" id="s-lider">—</div><div class="sc-label">Quer liderar</div><div class="sc-hint">Ver quem →</div><div class="sc-bar bar-orange" style="width:100%"></div></div>
         </div>
-
-        <div class="aniv-card">
-          <div class="aniv-header">
-            <div class="aniv-title">🎂 Próximos aniversários <span class="aniv-badge" id="aniv-mes"></span></div>
-            <div style="font-size:11px;color:var(--muted)" id="aniv-prox-label"></div>
-          </div>
-          <div class="aniv-list" id="aniv-list"></div>
-        </div>
-
-        <div class="cg">
-          <div class="cc"><div class="cc-title">Distribuição</div><div class="cc-sub">Por Área</div><canvas id="c-area" height="190"></canvas></div>
-          <div class="cc"><div class="cc-title">Tempo na empresa</div><div class="cc-sub">Senioridade do time</div><canvas id="c-tempo" height="190"></canvas></div>
-          <div class="cc"><div class="cc-title">Estado Civil</div><div class="cc-sub">Perfil familiar</div><canvas id="c-civil" height="190"></canvas></div>
-          <div class="cc"><div class="cc-title">Horário produtivo</div><div class="cc-sub">Pico do time</div>
-            <div class="ilist" id="i-horario"></div>
-          </div>
+        <div class="aniv-card"><div class="aniv-header"><div class="aniv-title">🎂 Aniversários do mês <span class="aniv-badge" id="aniv-mes"></span></div><div style="font-size:11px;color:var(--muted)" id="aniv-label"></div></div><div class="aniv-list" id="aniv-list"></div></div>
+        <div class="g3">
+          <div class="cc"><div class="cc-title">Por Área</div><div class="cc-sub">Distribuição do time</div><div class="ilist" id="i-area"></div></div>
+          <div class="cc"><div class="cc-title">Tempo de Casa</div><div class="cc-sub">Senioridade</div><div class="ilist" id="i-tempo"></div></div>
+          <div class="cc"><div class="cc-title">Estado Civil</div><div class="cc-sub">Perfil familiar</div><div class="ilist" id="i-civil"></div></div>
+          <div class="cc"><div class="cc-title">Horário Produtivo</div><div class="cc-sub">Pico do time</div><div class="ilist" id="i-horario"></div></div>
           <div class="cc"><div class="cc-title">Preferências de Presente</div><div class="cc-sub">Para ações de RH</div><div class="ilist" id="i-presente"></div></div>
           <div class="cc"><div class="cc-title">Estilos Musicais</div><div class="cc-sub">Top preferências</div><div class="ilist" id="i-musica"></div></div>
         </div>
       </div>
 
+      <!-- P2: COMPARATIVOS -->
+      <div id="tab-comparativos" class="tab-pane">
+        <div class="section-title">Comparativos por Área e Tempo de Casa</div>
+        <div class="g2">
+          <div class="cc">
+            <div class="cc-title">Cobertura do formulário</div>
+            <div class="cc-sub">Respostas por área</div>
+            <div class="ilist" id="i-comp-area"></div>
+          </div>
+          <div class="cc">
+            <div class="cc-title">Interesse em liderança</div>
+            <div class="cc-sub">Por área</div>
+            <div class="ilist" id="i-comp-lider"></div>
+          </div>
+        </div>
+        <div class="g2">
+          <div class="cc">
+            <div class="cc-title">Restrição alimentar</div>
+            <div class="cc-sub">Por área — para eventos e benefícios</div>
+            <div class="ilist" id="i-comp-restricao"></div>
+          </div>
+          <div class="cc">
+            <div class="cc-title">Horário produtivo</div>
+            <div class="cc-sub">Por tempo de casa</div>
+            <div id="comp-horario-tempo"></div>
+          </div>
+        </div>
+        <div class="cc">
+          <div class="cc-title">Visão consolidada por área</div>
+          <div class="cc-sub">Perfil de cada time</div>
+          <div class="tw"><table id="comp-table-area">
+            <thead><tr><th>Área</th><th>Pessoas</th><th>Com filhos</th><th>Com pet</th><th>Restrição</th><th>Quer liderar</th><th>Horário top</th><th>Presente top</th></tr></thead>
+            <tbody id="comp-tbody"></tbody>
+          </table></div>
+        </div>
+        <div class="cc">
+          <div class="cc-title">Preferências de presente</div>
+          <div class="cc-sub">Por tempo de casa — para personalizar ações</div>
+          <div id="comp-presente-tempo"></div>
+        </div>
+      </div>
+
+      <!-- P3: MOTIVAÇÃO -->
+      <div id="tab-motivacao" class="tab-pane">
+        <div class="section-title">Reconhecimento & Motivação</div>
+        <div class="g3">
+          <div class="cc">
+            <div class="cc-title">Sentem-se valorizados?</div>
+            <div class="cc-sub">Percepção de reconhecimento</div>
+            <div class="ilist" id="i-valorizado"></div>
+          </div>
+          <div class="cc">
+            <div class="cc-title">Temas de motivação</div>
+            <div class="cc-sub">Palavras-chave mais citadas</div>
+            <div class="ilist" id="i-temas-motiva"></div>
+          </div>
+          <div class="cc">
+            <div class="cc-title">O que dá gás</div>
+            <div class="cc-sub">Temas mais citados</div>
+            <div class="ilist" id="i-temas-gas"></div>
+          </div>
+        </div>
+        <div class="g2">
+          <div class="cc">
+            <div class="cc-title">O que motiva o time</div>
+            <div class="cc-sub">Respostas completas dos colaboradores</div>
+            <div class="ra-list" id="ra-motiva"></div>
+          </div>
+          <div class="cc">
+            <div class="cc-title">Se sente valorizado? Por quê?</div>
+            <div class="cc-sub">Percepção individual</div>
+            <div class="ra-list" id="ra-valorizado"></div>
+          </div>
+        </div>
+        <div class="cc">
+          <div class="cc-title">O que ajuda no dia difícil</div>
+          <div class="cc-sub">Gatilhos de resiliência do time</div>
+          <div class="ra-list" id="ra-gas"></div>
+        </div>
+      </div>
+
+      <!-- P4: DESENVOLVIMENTO -->
+      <div id="tab-desenvolvimento" class="tab-pane">
+        <div class="section-title">Desenvolvimento & Futuro</div>
+        <div class="g3">
+          <div class="cc">
+            <div class="cc-title">Interesse em liderança</div>
+            <div class="cc-sub">Disposição declarada</div>
+            <div class="ilist" id="i-lider"></div>
+          </div>
+          <div class="cc">
+            <div class="cc-title">Treinamentos mais desejados</div>
+            <div class="cc-sub">Top escolhas do time</div>
+            <div class="ilist" id="i-treino"></div>
+          </div>
+          <div class="cc">
+            <div class="cc-title">Tamanhos de camiseta</div>
+            <div class="cc-sub">Para kits e brindes</div>
+            <div class="ilist" id="i-camisa"></div>
+          </div>
+        </div>
+        <div class="g2">
+          <div class="cc">
+            <div class="cc-title">Interesse em liderança por área</div>
+            <div class="cc-sub">Onde está o pipeline de líderes</div>
+            <div class="ilist" id="i-lider-area"></div>
+          </div>
+          <div class="cc">
+            <div class="cc-title">Treinamentos por tempo de casa</div>
+            <div class="cc-sub">O que cada estágio precisa</div>
+            <div id="treino-tempo"></div>
+          </div>
+        </div>
+        <div class="cc">
+          <div class="cc-title">Pedidos específicos de desenvolvimento</div>
+          <div class="cc-sub">O que cada colaborador pediu</div>
+          <div class="ra-list" id="ra-treino-especifico"></div>
+        </div>
+      </div>
+
+      <!-- P5: CULTURA -->
+      <div id="tab-cultura" class="tab-pane">
+        <div class="section-title">Cultura & Melhorias</div>
+        <div class="g3">
+          <div class="cc">
+            <div class="cc-title">Temas de permanência</div>
+            <div class="cc-sub">O que retém o time</div>
+            <div class="ilist" id="i-temas-permanece"></div>
+          </div>
+          <div class="cc">
+            <div class="cc-title">Temas de melhoria</div>
+            <div class="cc-sub">O que incomoda ou falta</div>
+            <div class="ilist" id="i-temas-melhora"></div>
+          </div>
+          <div class="cc">
+            <div class="cc-title">Temas de sugestão</div>
+            <div class="cc-sub">O que o time propõe</div>
+            <div class="ilist" id="i-temas-sugestao"></div>
+          </div>
+        </div>
+        <div class="g2">
+          <div class="cc">
+            <div class="cc-title">O que faz permanecer</div>
+            <div class="cc-sub">Fatores de retenção em detalhes</div>
+            <div class="ra-list" id="ra-permanece"></div>
+          </div>
+          <div class="cc">
+            <div class="cc-title">O que melhoraria na empresa</div>
+            <div class="cc-sub">Atritos e oportunidades</div>
+            <div class="ra-list" id="ra-melhora"></div>
+          </div>
+        </div>
+        <div class="cc">
+          <div class="cc-title">Sugestões para o time</div>
+          <div class="cc-sub">Ideias dos colaboradores</div>
+          <div class="ra-list" id="ra-sugestao"></div>
+        </div>
+      </div>
+
+      <!-- P6: DATAS & AÇÕES -->
+      <div id="tab-datas" class="tab-pane">
+        <div class="section-title">Datas & Ações</div>
+        <div class="g2">
+          <div class="cc">
+            <div class="cc-title">Próximos aniversários</div>
+            <div class="cc-sub">Nos próximos 60 dias</div>
+            <div id="proximos-aniversarios"></div>
+          </div>
+          <div class="cc">
+            <div class="cc-title">Datas especiais cadastradas</div>
+            <div class="cc-sub">Distribuição por tipo</div>
+            <div class="ilist" id="i-datas-tipo"></div>
+            <div style="margin-top:14px;font-size:11px;color:var(--muted)">Total de datas: <span id="total-datas" style="color:var(--text)">—</span></div>
+          </div>
+        </div>
+        <div class="cc">
+          <div class="cc-title">Calendário de aniversários — todos os meses</div>
+          <div class="cc-sub">Visão anual para planejamento de ações</div>
+          <div class="cal-grid" id="cal-anual"></div>
+        </div>
+        <div class="cc" style="margin-top:0">
+          <div class="cc-title">Ações de reconhecimento recomendadas</div>
+          <div class="cc-sub">Baseadas nas preferências do time</div>
+          <div id="acoes-recomendadas"></div>
+        </div>
+      </div>
+
+      <!-- P7: COLABORADORES -->
       <div id="tab-colaboradores" class="tab-pane">
         <div class="cc">
-          <div class="search-row">
-            <input class="search-inp" type="text" id="search" placeholder="Buscar por nome, área ou cargo..." oninput="renderTabela()">
-            <div style="font-size:12px;color:var(--muted)" id="count-label"></div>
+          <input class="search-inp" type="text" id="search" placeholder="Buscar por nome, área ou cargo..." oninput="renderTabela()">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div style="font-size:11px;color:var(--muted)" id="count-label"></div>
           </div>
           <div class="tw">
             <table>
@@ -261,65 +516,20 @@ tr:hover td{background:rgba(255,255,255,.015);}
         </div>
       </div>
 
-      <div id="tab-wellbeing" class="tab-pane">
-        <div class="cg">
-          <div class="cc"><div class="cc-title">Liderança</div><div class="cc-sub">Interesse declarado</div><div class="ilist" id="i-lider"></div></div>
-          <div class="cc"><div class="cc-title">Treinamentos</div><div class="cc-sub">Mais desejados</div><div class="ilist" id="i-treino"></div></div>
-          <div class="cc"><div class="cc-title">Camiseta</div><div class="cc-sub">Para brindes e kits</div><div class="ilist" id="i-camisa"></div></div>
-        </div>
-        <div class="cg2">
-          <div class="cc">
-            <div class="cc-title">Família & Pets</div><div class="cc-sub">Composição do time</div>
-            <div class="triple" style="margin-top:8px">
-              <div class="triple-item"><div class="triple-val" id="t-filhos-n">—</div><div class="triple-pct" id="t-filhos-p"></div><div class="triple-label">👶 Com filhos</div></div>
-              <div class="triple-item"><div class="triple-val" id="t-pet-n">—</div><div class="triple-pct" id="t-pet-p"></div><div class="triple-label">🐾 Com pet</div></div>
-              <div class="triple-item"><div class="triple-val" id="t-restricao-n">—</div><div class="triple-pct" id="t-restricao-p"></div><div class="triple-label">⚠️ Restrição</div></div>
-            </div>
-            <div style="margin-top:20px"><div class="ilist" id="i-familia"></div></div>
-          </div>
-          <div class="cc">
-            <div class="cc-title">Restrições alimentares</div><div class="cc-sub">Lista para eventos</div>
-            <div id="lista-restricao" style="margin-top:4px"></div>
-          </div>
-        </div>
-        <div class="cc" style="margin-bottom:16px"><div class="cc-title">Motivação</div><div class="cc-sub">O que motiva o time</div><div class="ra-list" id="motivacoes"></div></div>
-        <div class="cc" style="margin-bottom:16px"><div class="cc-title">Retenção</div><div class="cc-sub">O que os faz permanecer</div><div class="ra-list" id="permanecer"></div></div>
-        <div class="cc"><div class="cc-title">Sugestões</div><div class="cc-sub">Do time para o time</div><div class="ra-list" id="sugestoes"></div></div>
-      </div>
     </div>
   </div>
 </div>
 
-<!-- MODAL FICHA -->
+<!-- MODAIS -->
 <div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
-  <div class="modal">
-    <div class="mh"><div><h2 id="m-nome">—</h2><div class="msub" id="m-sub">—</div></div>
-      <button class="mclose" onclick="closeModal()">×</button></div>
-    <div class="mbody" id="m-body"></div>
-  </div>
+  <div class="modal"><div class="mh"><div><h2 id="m-nome">—</h2><div class="msub" id="m-sub">—</div></div><button class="mclose" onclick="closeModal()">×</button></div><div class="mbody" id="m-body"></div></div>
 </div>
-
-<!-- MODAL CARD DRILL-DOWN -->
 <div class="modal-overlay" id="card-modal-overlay" onclick="if(event.target===this)closeCardModal()">
-  <div class="card-modal">
-    <div class="cm-header">
-      <div class="cm-title" id="cm-title">—</div>
-      <button class="mclose" onclick="closeCardModal()">×</button>
-    </div>
-    <div class="cm-body" id="cm-body"></div>
-  </div>
+  <div class="card-modal"><div class="cm-header"><div class="cm-title" id="cm-title">—</div><button class="mclose" onclick="closeCardModal()">×</button></div><div class="cm-body" id="cm-body"></div></div>
 </div>
-
-<!-- CONFIRM DELETE -->
 <div class="confirm-overlay" id="confirm-overlay">
-  <div class="confirm-box">
-    <div class="confirm-icon">🗑️</div>
-    <h3>Excluir ficha?</h3>
-    <p id="confirm-txt">Esta ação não pode ser desfeita.</p>
-    <div class="confirm-btns">
-      <button class="confirm-cancel" onclick="closeConfirm()">Cancelar</button>
-      <button class="confirm-del" onclick="doDelete()">Sim, excluir</button>
-    </div>
+  <div class="confirm-box"><div class="confirm-icon">🗑️</div><h3>Excluir ficha?</h3><p id="confirm-txt"></p>
+    <div class="confirm-btns"><button class="c-cancel" onclick="closeConfirm()">Cancelar</button><button class="c-del" onclick="doDelete()">Excluir</button></div>
   </div>
 </div>
 
@@ -327,370 +537,399 @@ tr:hover td{background:rgba(255,255,255,.015);}
 const SURL='https://cxauptpngygewxlcgatt.supabase.co';
 const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4YXVwdHBuZ3lnZXd4bGNnYXR0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA0OTczODMsImV4cCI6MjA4NjA3MzM4M30.g3U18WQ1yIacc6mFGkhmRUosC7gHPfttcDSMaBS7d5I';
 const USERS={'rh':'brasilbitcoin2024','admin':'bbadmin2024'};
-const C=['#3B6FFF','#F5C842','#2DD4A0','#F0506E','#9B6DFF','#F97316','#06B6D4','#84CC16','#EC4899','#A78BFA'];
 const MESES=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-let data=[],charts={},deleteId=null,autoRefreshTimer=null;
+const MESES_SHORT=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+let rawData=[],filtered=[],deleteId=null,autoTimer=null;
 
-// SESSION PERSISTENCE
-function saveSession(u){sessionStorage.setItem('bb_rh_user',u);}
-function getSession(){return sessionStorage.getItem('bb_rh_user');}
-function clearSession(){sessionStorage.removeItem('bb_rh_user');}
+// TEMAS NLP — palavras-chave para análise de texto
+const TEMAS_MOTIVA=['crescimento','aprendizado','time','equipe','desafio','propósito','resultado','reconhecimento','autonomia','impacto','inovação','cliente','missão','carreira'];
+const TEMAS_PERMANECE=['cultura','pessoas','time','crescimento','salário','flexibilidade','propósito','confiança','ambiente','benefícios','liderança','oportunidade'];
+const TEMAS_MELHORA=['comunicação','processos','benefícios','salário','estrutura','ferramentas','feedback','reconhecimento','autonomia','crescimento','tempo','organização'];
+const TEMAS_GAS=['música','esporte','família','foco','pausa','café','amigos','natureza','meditação','exercício','conversa','pet'];
 
-// RELÓGIO
-function tick(){
-  const n=new Date();
-  document.getElementById('relogio').textContent=
-    n.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'})+' · '+
-    n.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-}
-tick(); setInterval(tick,1000);
-
-// AUTO-REFRESH a cada 10 minutos
-function startAutoRefresh(){
-  if(autoRefreshTimer)clearInterval(autoRefreshTimer);
-  autoRefreshTimer=setInterval(()=>{
-    document.getElementById('sync-badge').textContent='↻ Atualizando...';
-    load(true);
-  },10*60*1000);
+function extrairTemas(arr, chave, temas){
+  const m={};
+  temas.forEach(t=>m[t]=0);
+  arr.forEach(r=>{
+    const txt=(r[chave]||'').toLowerCase();
+    temas.forEach(t=>{if(txt.includes(t))m[t]++;});
+  });
+  return Object.fromEntries(Object.entries(m).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]));
 }
 
-window.addEventListener('load',()=>{
-  const u=getSession();
-  if(u&&USERS[u]){
-    document.getElementById('login-screen').style.display='none';
-    document.getElementById('dashboard').style.display='block';
-    load();
-  }
-});
+// SESSION
+function saveSession(u){sessionStorage.setItem('bb_u',u);}
+function getSession(){return sessionStorage.getItem('bb_u');}
+function clearSession(){sessionStorage.removeItem('bb_u');}
+
+function tick(){const n=new Date();document.getElementById('relogio').textContent=n.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'})+' · '+n.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});}
+tick();setInterval(tick,1000);
+
+function startAutoRefresh(){if(autoTimer)clearInterval(autoTimer);autoTimer=setInterval(()=>{document.getElementById('sync-badge').textContent='↻ Atualizando...';load(true);},10*60*1000);}
+
+window.addEventListener('load',()=>{const u=getSession();if(u&&USERS[u]){document.getElementById('login-screen').style.display='none';document.getElementById('dashboard').style.display='block';load();}});
 
 function doLogin(){
-  const u=document.getElementById('lu').value.trim();
-  const p=document.getElementById('lp').value;
-  if(USERS[u]&&USERS[u]===p){
-    saveSession(u);
-    document.getElementById('login-screen').style.display='none';
-    document.getElementById('dashboard').style.display='block';
-    load();
-  } else document.getElementById('lerr').style.display='block';
+  const u=document.getElementById('lu').value.trim(),p=document.getElementById('lp').value;
+  if(USERS[u]&&USERS[u]===p){saveSession(u);document.getElementById('login-screen').style.display='none';document.getElementById('dashboard').style.display='block';load();}
+  else document.getElementById('lerr').style.display='block';
 }
-function doLogout(){
-  clearSession();
-  if(autoRefreshTimer)clearInterval(autoRefreshTimer);
-  document.getElementById('dashboard').style.display='none';
-  document.getElementById('login-screen').style.display='flex';
-}
+function doLogout(){clearSession();if(autoTimer)clearInterval(autoTimer);document.getElementById('dashboard').style.display='none';document.getElementById('login-screen').style.display='flex';}
 
 async function load(silent=false){
   if(!silent){document.getElementById('loading').style.display='block';document.getElementById('content').style.display='none';}
   try{
-    const r=await fetch(`${SURL}/rest/v1/brasil_bitcoin_respostas?select=*&order=criado_em.desc`,
-      {headers:{'apikey':KEY,'Authorization':'Bearer '+KEY}});
-    data=await r.json();
+    const r=await fetch(`${SURL}/rest/v1/brasil_bitcoin_respostas?select=*&order=criado_em.desc`,{headers:{'apikey':KEY,'Authorization':'Bearer '+KEY}});
+    rawData=await r.json();
+    document.getElementById('sync-badge').textContent='● Ao vivo';
+    applyFilters();
+    startAutoRefresh();
     document.getElementById('loading').style.display='none';
     document.getElementById('content').style.display='block';
-    document.getElementById('sync-badge').textContent='● Ao vivo';
-    renderAll();
-    startAutoRefresh();
   }catch(e){document.getElementById('loading').textContent='Erro ao carregar.';}
 }
+
+function applyFilters(){
+  const fa=document.getElementById('f-area').value;
+  const ft=document.getElementById('f-tempo').value;
+  filtered=rawData.filter(r=>(!fa||r.area===fa)&&(!ft||r.tempo_empresa===ft));
+  const info=filtered.length===rawData.length?`${rawData.length} respostas`:`${filtered.length} de ${rawData.length} respostas`;
+  document.getElementById('filter-info').textContent=info;
+  renderAll();
+}
+function resetFilters(){document.getElementById('f-area').value='';document.getElementById('f-tempo').value='';applyFilters();}
 
 function showTab(t){
   document.querySelectorAll('.tab-pane').forEach(el=>el.classList.remove('active'));
   document.getElementById('tab-'+t).classList.add('active');
-  document.querySelectorAll('.tab').forEach((el,i)=>{
-    el.classList.toggle('active',['visao','colaboradores','wellbeing'][i]===t);
-  });
+  const tabs=['visao','comparativos','motivacao','desenvolvimento','cultura','datas','colaboradores'];
+  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('active',tabs[i]===t));
 }
 
-function cnt(k){const m={};data.forEach(r=>{const v=r[k]||'Não informado';m[v]=(m[v]||0)+1;});return m;}
-function cntArr(k){const m={};data.forEach(r=>{(r[k]||[]).forEach(v=>{if(v)m[v]=(m[v]||0)+1;});});return m;}
+const pct=(v,t)=>t?Math.round(v/t*100)+'%':'0%';
+function cnt(k,arr=filtered){const m={};arr.forEach(r=>{const v=r[k]||'Não informado';m[v]=(m[v]||0)+1;});return m;}
+function cntArr(k,arr=filtered){const m={};arr.forEach(r=>{(r[k]||[]).forEach(v=>{if(v)m[v]=(m[v]||0)+1;});});return m;}
 function topKey(o){return Object.entries(o).sort((a,b)=>b[1]-a[1])[0]||['—',0];}
-function pct(v,t){return t?Math.round(v/t*100)+'%':'0%';}
 
-function mkChart(id,type,labels,vals){
-  if(charts[id])charts[id].destroy();
-  const ctx=document.getElementById(id)?.getContext('2d');
-  if(!ctx)return;
-  const isDoughnut=type==='doughnut';
-  charts[id]=new Chart(ctx,{type,
-    data:{labels,datasets:[{data:vals,backgroundColor:C.slice(0,labels.length),borderColor:'transparent',borderRadius:isDoughnut?0:5}]},
-    options:{responsive:true,maintainAspectRatio:true,cutout:isDoughnut?'62%':undefined,
-      plugins:{legend:{display:isDoughnut,position:'right',labels:{color:'rgba(255,255,255,.5)',font:{size:11,family:'DM Sans'},boxWidth:10,padding:12,usePointStyle:true,pointStyleWidth:8}},
-        tooltip:{callbacks:{label:c=>` ${c.parsed}${isDoughnut?' ('+pct(c.parsed,vals.reduce((a,b)=>a+b,0))+')':''}`}}},
-      scales:!isDoughnut?{x:{ticks:{color:'rgba(255,255,255,.4)',font:{size:10}},grid:{color:'rgba(255,255,255,.03)'},border:{display:false}},
-        y:{ticks:{color:'rgba(255,255,255,.4)',font:{size:10}},grid:{color:'rgba(255,255,255,.03)'},border:{display:false}}}:undefined}});
-}
-
-// INSIGHT BARS HORIZONTAL — padrão único para todos
-function mkInsight(id,obj,total){
+function mkInsight(id,obj,total,color='var(--blue)'){
+  const el=document.getElementById(id);if(!el)return;
   const sorted=Object.entries(obj).sort((a,b)=>b[1]-a[1]).slice(0,8);
   const max=sorted[0]?.[1]||1;
-  document.getElementById(id).innerHTML=sorted.map(([k,v])=>`
+  el.innerHTML=sorted.length?sorted.map(([k,v])=>`
     <div class="irow">
       <div class="ilabel" title="${k}">${k}</div>
-      <div class="ibar-wrap"><div class="ibar" style="width:${(v/max)*100}%"></div></div>
+      <div class="ibar-wrap"><div class="ibar" style="width:${(v/max)*100}%;background:${color}"></div></div>
       <div class="inum">${v}</div>
       <div class="ipct">${pct(v,total)}</div>
-    </div>`).join('');
+    </div>`).join(''):`<div class="cc-0">Sem dados</div>`;
 }
 
-function renderAbertas(id,key){
-  const items=data.filter(r=>r[key]);
-  document.getElementById(id).innerHTML=items.length
-    ?items.map(r=>`<div class="ra-item"><div class="ra-autor">${r.nome_completo||'—'} · ${r.area||'—'}</div><div class="ra-txt">${r[key]}</div></div>`).join('')
-    :'<div style="color:var(--muted);font-size:13px;padding:8px 0">Nenhuma resposta ainda.</div>';
+function renderAbertas(id,key,arr=filtered){
+  const el=document.getElementById(id);if(!el)return;
+  const items=arr.filter(r=>r[key]);
+  el.innerHTML=items.length?items.map(r=>`<div class="ra-item"><div class="ra-autor">${r.nome_completo||'—'} · ${r.area||'—'}</div><div class="ra-txt">${r[key]}</div></div>`).join(''):'<div class="cc-0">Nenhuma resposta ainda.</div>';
 }
 
-function renderAniversarios(){
-  const hoje=new Date();
-  const mesAtual=hoje.getMonth();
-  const diaAtual=hoje.getDate();
+function renderAlerts(n){
+  const nFilhos=filtered.filter(r=>r.tem_filhos===true).length;
+  const nLider=filtered.filter(r=>r.interesse_lideranca==='Sim').length;
+  const nRestr=filtered.filter(r=>r.restricao_alimentar&&r.restricao_alimentar!=='Não').length;
+  const alerts=[];
+  if(n>0&&nLider/n>.4)alerts.push({type:'info',icon:'🚀',title:`${pct(nLider,n)} quer assumir liderança`,txt:'Pipeline de líderes expressivo. Considere um programa formal de desenvolvimento.'});
+  if(n>0&&nRestr/n>.2)alerts.push({type:'warn',icon:'⚠️',title:`${pct(nRestr,n)} tem restrição alimentar`,txt:'Atenção ao planejar eventos, confraternizações e cestas de benefícios.'});
+  if(n>0&&nFilhos/n>.5)alerts.push({type:'success',icon:'👨‍👩‍👧',title:`Maioria tem filhos (${pct(nFilhos,n)})`,txt:'Considere benefícios voltados a família: day off no aniversário dos filhos, seguro saúde familiar.'});
+  if(n<5)alerts.push({type:'danger',icon:'📋',title:'Cobertura baixa do formulário',txt:`Apenas ${n} respostas coletadas. Incentive os colaboradores a preencher para insights mais precisos.`});
+  document.getElementById('alerts-container').innerHTML=alerts.map(a=>`
+    <div class="alert-card ${a.type}"><div class="alert-icon">${a.icon}</div><div><div class="alert-title">${a.title}</div><div class="alert-txt">${a.txt}</div></div></div>`).join('');
+}
+
+function renderAniversarios(arr=filtered){
+  const hoje=new Date(),mesAtual=hoje.getMonth(),diaAtual=hoje.getDate();
   document.getElementById('aniv-mes').textContent=MESES[mesAtual];
   const anivs=[];
-  data.forEach(r=>{
-    if(r.detalhe_datas){
-      const matches=r.detalhe_datas.match(/(\d{1,2})\/(\d{1,2})/g);
-      if(matches) matches.forEach(d=>{
-        const[dia,mes]=d.split('/').map(Number);
-        if(!isNaN(dia)&&!isNaN(mes)) anivs.push({nome:r.nome_completo||'—',area:r.area||'—',dia,mes});
-      });
-    }
+  arr.forEach(r=>{
+    if(r.detalhe_datas){const ms=r.detalhe_datas.match(/(\d{1,2})\/(\d{1,2})/g)||[];ms.forEach(d=>{const[dia,mes]=d.split('/').map(Number);if(!isNaN(dia)&&!isNaN(mes))anivs.push({nome:r.nome_completo||'—',area:r.area||'—',dia,mes});});}
   });
   const doMes=anivs.filter(a=>a.mes===mesAtual+1).sort((a,b)=>a.dia-b.dia);
-  document.getElementById('aniv-prox-label').textContent=`${doMes.length} aniversário(s) em ${MESES[mesAtual]}`;
-  document.getElementById('aniv-list').innerHTML=doMes.length
-    ?doMes.map(a=>{
-      const diasR=a.dia-diaAtual;
-      const diasLabel=diasR===0?'🎉 Hoje!':diasR===1?'Amanhã':diasR>0?`Em ${diasR} dias`:`Dia ${a.dia}`;
-      return `<div class="aniv-item">
-        <div class="aniv-avatar">${(a.nome||'?')[0].toUpperCase()}</div>
-        <div><div class="aniv-nome">${a.nome}</div><div class="aniv-data">${a.area} · ${a.dia}/${a.mes}</div><div class="aniv-dias">${diasLabel}</div></div>
-      </div>`;
-    }).join('')
-    :'<div style="color:var(--muted);font-size:13px;font-style:italic">Nenhum aniversário cadastrado este mês.</div>';
+  document.getElementById('aniv-label').textContent=`${doMes.length} aniversário(s) em ${MESES[mesAtual]}`;
+  document.getElementById('aniv-list').innerHTML=doMes.length?doMes.map(a=>{
+    const dr=a.dia-diaAtual;
+    const dl=dr===0?'🎉 Hoje!':dr===1?'Amanhã':dr>0?`Em ${dr} dias`:`Dia ${a.dia}`;
+    return `<div class="aniv-item"><div class="aniv-avatar">${(a.nome[0]||'?').toUpperCase()}</div><div><div class="aniv-nome">${a.nome}</div><div class="aniv-data">${a.area} · ${a.dia}/${a.mes}</div><div class="aniv-dias">${dl}</div></div></div>`;
+  }).join(''):'<div style="color:var(--muted);font-size:12px;font-style:italic">Nenhum aniversário cadastrado este mês.</div>';
+}
+
+function renderComparativos(n){
+  // Por área
+  const areas=Object.keys(cnt('area',filtered));
+  const compAreaHTML=areas.map(area=>{
+    const sub=filtered.filter(r=>r.area===area);
+    const nl=sub.filter(r=>r.interesse_lideranca==='Sim').length;
+    return `<div class="irow"><div class="ilabel" title="${area}">${area}</div><div class="ibar-wrap"><div class="ibar" style="width:${(sub.length/(n||1))*100}%"></div></div><div class="inum">${sub.length}</div><div class="ipct">${pct(sub.length,n)}</div></div>`;
+  }).join('');
+  const el=document.getElementById('i-comp-area');if(el)el.innerHTML=compAreaHTML||'<div class="cc-0">Sem dados</div>';
+
+  // Liderança por área
+  const liderAreaObj={};
+  areas.forEach(area=>{const sub=filtered.filter(r=>r.area===area);const nl=sub.filter(r=>r.interesse_lideranca==='Sim').length;if(sub.length)liderAreaObj[area]=nl;});
+  mkInsight('i-comp-lider',liderAreaObj,n,'var(--orange)');
+  mkInsight('i-lider-area',liderAreaObj,n,'var(--orange)');
+
+  // Restrição por área
+  const restrAreaObj={};
+  areas.forEach(area=>{const sub=filtered.filter(r=>r.area===area);const nr=sub.filter(r=>r.restricao_alimentar&&r.restricao_alimentar!=='Não').length;if(nr)restrAreaObj[area]=nr;});
+  mkInsight('i-comp-restricao',restrAreaObj,n,'var(--red)');
+
+  // Tabela consolidada por área
+  const tbody=document.getElementById('comp-tbody');
+  if(tbody){tbody.innerHTML=areas.map(area=>{
+    const sub=filtered.filter(r=>r.area===area);
+    const nf=sub.filter(r=>r.tem_filhos===true).length;
+    const np=sub.filter(r=>r.tem_pet===true).length;
+    const nr=sub.filter(r=>r.restricao_alimentar&&r.restricao_alimentar!=='Não').length;
+    const nl=sub.filter(r=>r.interesse_lideranca==='Sim').length;
+    const [topH]=topKey(cnt('horario_produtividade',sub));
+    const [topP]=topKey(cntArr('preferencias_presente',sub));
+    return `<tr><td><strong>${area}</strong></td><td>${sub.length}</td><td>${nf} (${pct(nf,sub.length)})</td><td>${np} (${pct(np,sub.length)})</td><td>${nr?`<span class="badge b-red">${nr}</span>`:nr}</td><td>${nl} (${pct(nl,sub.length)})</td><td>${topH}</td><td>${topP}</td></tr>`;
+  }).join('');}
+
+  // Horário por tempo de casa
+  const tempos=Object.keys(cnt('tempo_empresa',filtered));
+  const htEl=document.getElementById('comp-horario-tempo');
+  if(htEl){htEl.innerHTML=tempos.map(t=>{
+    const sub=filtered.filter(r=>r.tempo_empresa===t);
+    const [topH]=topKey(cnt('horario_produtividade',sub));
+    return `<div class="irow" style="margin-bottom:8px"><div class="ilabel" title="${t}">${t}</div><div style="flex:1;font-size:12px;color:var(--text)">${topH}</div><div class="ipct">${sub.length} pessoas</div></div>`;
+  }).join('')||'<div class="cc-0">Sem dados</div>';}
+
+  // Presente por tempo de casa
+  const ptEl=document.getElementById('comp-presente-tempo');
+  if(ptEl){ptEl.innerHTML=tempos.map(t=>{
+    const sub=filtered.filter(r=>r.tempo_empresa===t);
+    const [topP]=topKey(cntArr('preferencias_presente',sub));
+    return `<div class="irow" style="margin-bottom:8px"><div class="ilabel" title="${t}">${t}</div><div style="flex:1;font-size:12px;color:var(--text)">${topP||'—'}</div><div class="ipct">${sub.length} pessoas</div></div>`;
+  }).join('')||'<div class="cc-0">Sem dados</div>';}
+}
+
+function renderDatas(arr=filtered){
+  const hoje=new Date();
+  const anivs=[];
+  arr.forEach(r=>{
+    if(r.detalhe_datas){const ms=r.detalhe_datas.match(/(\d{1,2})\/(\d{1,2})/g)||[];ms.forEach(d=>{const[dia,mes]=d.split('/').map(Number);if(!isNaN(dia)&&!isNaN(mes))anivs.push({nome:r.nome_completo||'—',area:r.area||'—',cargo:r.cargo||'—',dia,mes});});}
+  });
+
+  // Próximos 60 dias
+  const proximos=[];
+  for(let i=0;i<=60;i++){const d=new Date(hoje);d.setDate(hoje.getDate()+i);anivs.forEach(a=>{if(a.dia===d.getDate()&&a.mes===d.getMonth()+1)proximos.push({...a,diasRestantes:i});});}
+  const proxEl=document.getElementById('proximos-aniversarios');
+  if(proxEl){proxEl.innerHTML=proximos.length?proximos.map(a=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04)">
+      <div><div style="font-size:12px;font-weight:500">${a.nome}</div><div style="font-size:10px;color:var(--muted)">${a.area} · ${a.cargo}</div></div>
+      <div style="text-align:right"><div style="font-size:11px;color:var(--yellow)">${a.diasRestantes===0?'🎉 Hoje!':a.diasRestantes===1?'Amanhã':'Em '+a.diasRestantes+' dias'}</div><div style="font-size:10px;color:var(--muted)">${a.dia}/${a.mes}</div></div>
+    </div>`).join(''):'<div class="cc-0">Nenhuma data nos próximos 60 dias.</div>';}
+
+  // Calendário anual
+  const porMes=Array(12).fill(0);
+  anivs.forEach(a=>{if(a.mes>=1&&a.mes<=12)porMes[a.mes-1]++;});
+  const calEl=document.getElementById('cal-anual');
+  if(calEl){calEl.innerHTML=MESES_SHORT.map((m,i)=>`
+    <div class="cal-item" style="${i===hoje.getMonth()?'border-color:rgba(59,111,255,.4);background:rgba(59,111,255,.06)':''}">
+      <div class="cal-mes">${m}</div>
+      <div class="cal-val" style="color:${porMes[i]>0?'var(--text)':'var(--muted)'}">${porMes[i]}</div>
+      <div class="cal-tipo">${porMes[i]>0?'data(s)':'—'}</div>
+    </div>`).join('');}
+
+  // Tipo de datas
+  const tiposDatas={'Aniversário':0,'Casamento':0,'Nascimento de filho':0,'Outra':0};
+  arr.forEach(r=>{(r.datas_especiais||[]).forEach(d=>{if(tiposDatas[d]!==undefined)tiposDatas[d]++;});});
+  const totalD=Object.values(tiposDatas).reduce((a,b)=>a+b,0);
+  mkInsight('i-datas-tipo',tiposDatas,totalD,'var(--purple)');
+  const tdEl=document.getElementById('total-datas');if(tdEl)tdEl.textContent=totalD;
+
+  // Ações recomendadas
+  const presente=cntArr('preferencias_presente',arr);
+  const [top1]=topKey(presente);
+  const [top2]=topKey(Object.fromEntries(Object.entries(presente).filter(([k])=>k!==top1)));
+  const nL=arr.filter(r=>r.interesse_lideranca==='Sim').length;
+  const acEl=document.getElementById('acoes-recomendadas');
+  if(acEl){acEl.innerHTML=`
+    <div class="irow" style="margin-bottom:12px;align-items:flex-start;gap:12px">
+      <span style="font-size:20px">🎁</span>
+      <div><div style="font-size:12px;font-weight:500">Kit de brindes personalizado</div><div style="font-size:11px;color:var(--muted);margin-top:3px">Top preferências do time: <strong style="color:var(--text)">${top1||'—'}</strong> e <strong style="color:var(--text)">${top2||'—'}</strong>. Monte kits segmentados por preferência.</div></div>
+    </div>
+    <div class="irow" style="margin-bottom:12px;align-items:flex-start;gap:12px">
+      <span style="font-size:20px">🎂</span>
+      <div><div style="font-size:12px;font-weight:500">Campanha de aniversariantes</div><div style="font-size:11px;color:var(--muted);margin-top:3px">${proximos.length} datas nos próximos 60 dias. Configure lembretes automáticos e mensagens personalizadas.</div></div>
+    </div>
+    <div class="irow" style="align-items:flex-start;gap:12px">
+      <span style="font-size:20px">🚀</span>
+      <div><div style="font-size:12px;font-weight:500">Programa de liderança</div><div style="font-size:11px;color:var(--muted);margin-top:3px">${nL} colaborador(es) sinalizaram interesse em liderar. Mapeie potencial e crie trilha de desenvolvimento.</div></div>
+    </div>`;}
+}
+
+function renderTreinamentoPorTempo(){
+  const tempos=Object.keys(cnt('tempo_empresa',filtered));
+  const el=document.getElementById('treino-tempo');
+  if(!el)return;
+  el.innerHTML=tempos.map(t=>{
+    const sub=filtered.filter(r=>r.tempo_empresa===t);
+    const [topT]=topKey(cntArr('tipos_treinamento',sub));
+    return `<div class="irow" style="margin-bottom:8px"><div class="ilabel" title="${t}">${t}</div><div style="flex:1;font-size:12px;color:var(--text)">${topT||'—'}</div><div class="ipct">${sub.length}p</div></div>`;
+  }).join('')||'<div class="cc-0">Sem dados</div>';
 }
 
 function renderAll(){
-  const n=data.length;
-  if(!n){document.getElementById('loading').textContent='Nenhuma resposta ainda.';document.getElementById('loading').style.display='block';return;}
-  const nFilhos=data.filter(r=>r.tem_filhos===true).length;
-  const nPet=data.filter(r=>r.tem_pet===true).length;
-  const nRestr=data.filter(r=>r.restricao_alimentar&&r.restricao_alimentar!=='Não').length;
-  const nLider=data.filter(r=>r.interesse_lideranca==='Sim').length;
+  const d=filtered,n=d.length;
+  if(!n){['i-area','i-tempo','i-civil','i-horario','i-presente','i-musica','i-valorizado','i-temas-motiva','i-temas-gas','i-lider','i-treino','i-camisa','i-temas-permanece','i-temas-melhora','i-temas-sugestao'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='<div class="cc-0">Sem dados com esses filtros.</div>';});renderAlerts(0);renderTabela();return;}
+
+  renderAlerts(n);
+
+  const nFilhos=d.filter(r=>r.tem_filhos===true).length;
+  const nPet=d.filter(r=>r.tem_pet===true).length;
+  const nRestr=d.filter(r=>r.restricao_alimentar&&r.restricao_alimentar!=='Não').length;
+  const nLider=d.filter(r=>r.interesse_lideranca==='Sim').length;
   const[ta,tan]=topKey(cnt('area'));
   document.getElementById('s-total').textContent=n;
   document.getElementById('s-area').textContent=ta;
-  document.getElementById('s-area-n').textContent=`${tan} de ${n} — área líder`;
+  document.getElementById('s-area-n').textContent=`${tan} de ${n}`;
   document.getElementById('s-filhos').textContent=nFilhos;
   document.getElementById('s-pet').textContent=nPet;
   document.getElementById('s-restricao').textContent=nRestr;
   document.getElementById('s-lider').textContent=nLider;
-  renderAniversarios();
 
-  // Visão geral — doughnut para área, tempo, civil; insight bars para o resto
-  const areas=cnt('area'); mkChart('c-area','doughnut',Object.keys(areas),Object.values(areas));
-  const tempos=cnt('tempo_empresa'); mkChart('c-tempo','doughnut',Object.keys(tempos),Object.values(tempos));
-  const civil=cnt('estado_civil'); mkChart('c-civil','doughnut',Object.keys(civil),Object.values(civil));
-  mkInsight('i-horario',cnt('horario_produtividade'),n);
+  renderAniversarios(d);
+
+  // P1 - Visão geral
+  mkInsight('i-area',cnt('area'),n);
+  mkInsight('i-tempo',cnt('tempo_empresa'),n,'var(--yellow)');
+  mkInsight('i-civil',cnt('estado_civil'),n,'var(--green)');
+  mkInsight('i-horario',cnt('horario_produtividade'),n,'var(--purple)');
   mkInsight('i-presente',cntArr('preferencias_presente'),n);
-  mkInsight('i-musica',cntArr('estilos_musica'),n);
+  mkInsight('i-musica',cntArr('estilos_musica'),n,'var(--orange)');
 
-  // Wellbeing — tudo insight bars
-  mkInsight('i-lider',cnt('interesse_lideranca'),n);
+  // P2 - Comparativos
+  renderComparativos(n);
+
+  // P3 - Motivação
+  mkInsight('i-valorizado',cnt('sente_valorizado'),n,'var(--green)');
+  mkInsight('i-temas-motiva',extrairTemas(d,'o_que_motiva',TEMAS_MOTIVA),n,'var(--blue)');
+  mkInsight('i-temas-gas',extrairTemas(d,'o_que_da_gas',TEMAS_GAS),n,'var(--purple)');
+  renderAbertas('ra-motiva','o_que_motiva',d);
+  renderAbertas('ra-valorizado','sente_valorizado',d);
+  renderAbertas('ra-gas','o_que_da_gas',d);
+
+  // P4 - Desenvolvimento
+  mkInsight('i-lider',cnt('interesse_lideranca'),n,'var(--orange)');
   mkInsight('i-treino',cntArr('tipos_treinamento'),n);
-  mkInsight('i-camisa',cnt('tamanho_camiseta'),n);
+  mkInsight('i-camisa',cnt('tamanho_camiseta'),n,'var(--purple)');
+  renderTreinamentoPorTempo();
+  renderAbertas('ra-treino-especifico','treinamento_especifico',d);
 
-  document.getElementById('t-filhos-n').textContent=nFilhos;
-  document.getElementById('t-filhos-p').textContent=pct(nFilhos,n)+' do time';
-  document.getElementById('t-pet-n').textContent=nPet;
-  document.getElementById('t-pet-p').textContent=pct(nPet,n)+' do time';
-  document.getElementById('t-restricao-n').textContent=nRestr;
-  document.getElementById('t-restricao-p').textContent=pct(nRestr,n)+' do time';
+  // P5 - Cultura
+  mkInsight('i-temas-permanece',extrairTemas(d,'o_que_faz_permanecer',TEMAS_PERMANECE),n,'var(--green)');
+  mkInsight('i-temas-melhora',extrairTemas(d,'melhorar_empresa',TEMAS_MELHORA),n,'var(--red)');
+  mkInsight('i-temas-sugestao',extrairTemas(d,'sugestao_time',TEMAS_MELHORA),n,'var(--blue)');
+  renderAbertas('ra-permanece','o_que_faz_permanecer',d);
+  renderAbertas('ra-melhora','melhorar_empresa',d);
+  renderAbertas('ra-sugestao','sugestao_time',d);
 
-  mkInsight('i-familia',{'Com filhos':nFilhos,'Sem filhos':n-nFilhos,'Com pet':nPet,'Sem pet':n-nPet,'C/ restrição':nRestr,'Sem restrição':n-nRestr},n);
+  // P6 - Datas
+  renderDatas(d);
 
-  const comRestr=data.filter(r=>r.restricao_alimentar&&r.restricao_alimentar!=='Não');
-  document.getElementById('lista-restricao').innerHTML=comRestr.length
-    ?comRestr.map(r=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04)">
-        <div><strong style="font-size:13px">${r.nome_completo||'—'}</strong> <span style="color:var(--muted);font-size:11px">${r.area||''}</span></div>
-        <div style="color:var(--red);font-size:12px">${r.restricao_alimentar}</div>
-      </div>`).join('')
-    :'<div style="color:var(--muted);font-size:13px;padding:8px 0">Nenhuma restrição cadastrada.</div>';
-
-  renderAbertas('motivacoes','o_que_motiva');
-  renderAbertas('permanecer','o_que_faz_permanecer');
-  renderAbertas('sugestoes','sugestao_time');
   renderTabela();
 }
 
-// CARD DRILL-DOWN MODAL
+// CARD DRILL-DOWN
 function openCardModal(tipo){
-  let titulo='', items=[];
-  if(tipo==='total'){
-    titulo=`👥 Todos os colaboradores (${data.length})`;
-    items=data.map(r=>({nome:r.nome_completo,area:r.area,cargo:r.cargo,detalhe:`Tempo: ${r.tempo_empresa||'—'} · ${r.email||''}`}));
-  } else if(tipo==='area'){
-    titulo='🏢 Colaboradores por área';
-    const areas=cnt('area');
-    const sorted=Object.entries(areas).sort((a,b)=>b[1]-a[1]);
-    items=sorted.map(([area,qtd])=>{
-      const colabs=data.filter(r=>r.area===area).map(r=>r.nome_completo||'—').join(', ');
-      return {nome:area,area:`${qtd} colaborador(es)`,detalhe:colabs};
-    });
-  } else if(tipo==='filhos'){
-    titulo=`👶 Colaboradores com filhos (${data.filter(r=>r.tem_filhos===true).length})`;
-    items=data.filter(r=>r.tem_filhos===true).map(r=>({
-      nome:r.nome_completo,area:r.area,
-      detalhe:`${r.qtd_filhos?r.qtd_filhos+' filho(s)':''} ${r.nomes_idades_filhos?'· '+r.nomes_idades_filhos:''} ${r.filhos_gostam?'· Gostam de: '+r.filhos_gostam:''}`
-    }));
-  } else if(tipo==='pet'){
-    titulo=`🐾 Colaboradores com pet (${data.filter(r=>r.tem_pet===true).length})`;
-    items=data.filter(r=>r.tem_pet===true).map(r=>({
-      nome:r.nome_completo,area:r.area,
-      detalhe:`${r.tipo_pet||''} ${r.nome_pet?'· Nome: '+r.nome_pet:''}`
-    }));
-  } else if(tipo==='restricao'){
-    titulo=`⚠️ Restrições alimentares (${data.filter(r=>r.restricao_alimentar&&r.restricao_alimentar!=='Não').length})`;
-    items=data.filter(r=>r.restricao_alimentar&&r.restricao_alimentar!=='Não').map(r=>({
-      nome:r.nome_completo,area:r.area,
-      detalhe:`Restrição: ${r.restricao_alimentar}`
-    }));
-  } else if(tipo==='lider'){
-    titulo=`🚀 Interesse em liderança (${data.filter(r=>r.interesse_lideranca==='Sim').length})`;
-    items=data.filter(r=>r.interesse_lideranca==='Sim').map(r=>({
-      nome:r.nome_completo,area:r.area,cargo:r.cargo,
-      detalhe:`Treinamentos: ${(r.tipos_treinamento||[]).join(', ')||'—'} · ${r.treinamento_especifico||''}`
-    }));
-  }
+  let titulo='',items=[];
+  const d=filtered;
+  if(tipo==='total'){titulo=`👥 Todos (${d.length})`;items=d.map(r=>({nome:r.nome_completo,area:r.area,cargo:r.cargo,detalhe:`${r.tempo_empresa||'—'} · ${r.email||''}`}));}
+  else if(tipo==='area'){titulo='🏢 Por área';const areas=cnt('area');items=Object.entries(areas).sort((a,b)=>b[1]-a[1]).map(([area,qtd])=>({nome:area,area:`${qtd} colaborador(es)`,detalhe:d.filter(r=>r.area===area).map(r=>r.nome_completo||'—').join(', ')}));}
+  else if(tipo==='filhos'){titulo=`👶 Com filhos (${d.filter(r=>r.tem_filhos===true).length})`;items=d.filter(r=>r.tem_filhos===true).map(r=>({nome:r.nome_completo,area:r.area,detalhe:`${r.qtd_filhos||''}f ${r.nomes_idades_filhos?'· '+r.nomes_idades_filhos:''} ${r.filhos_gostam?'· Gostam: '+r.filhos_gostam:''}`.trim()}));}
+  else if(tipo==='pet'){titulo=`🐾 Com pet (${d.filter(r=>r.tem_pet===true).length})`;items=d.filter(r=>r.tem_pet===true).map(r=>({nome:r.nome_completo,area:r.area,detalhe:`${r.tipo_pet||''} ${r.nome_pet?'· '+r.nome_pet:''}`.trim()}));}
+  else if(tipo==='restricao'){titulo=`⚠️ Restrição alimentar`;items=d.filter(r=>r.restricao_alimentar&&r.restricao_alimentar!=='Não').map(r=>({nome:r.nome_completo,area:r.area,detalhe:`Restrição: ${r.restricao_alimentar}`}));}
+  else if(tipo==='lider'){titulo=`🚀 Interesse em liderança`;items=d.filter(r=>r.interesse_lideranca==='Sim').map(r=>({nome:r.nome_completo,area:r.area,cargo:r.cargo,detalhe:`Treinos: ${(r.tipos_treinamento||[]).join(', ')||'—'}`}));}
   document.getElementById('cm-title').textContent=titulo;
-  document.getElementById('cm-body').innerHTML=items.length
-    ?items.map(it=>`<div class="cm-item">
-        <div class="cm-nome">${it.nome||'—'} ${it.area?'<span style="color:var(--muted);font-size:11px;font-weight:400">· '+it.area+'</span>':''} ${it.cargo?'<span style="color:var(--muted);font-size:11px;font-weight:400">· '+it.cargo+'</span>':''}</div>
-        ${it.detalhe?`<div class="cm-detalhe">${it.detalhe.trim()}</div>`:''}
-      </div>`).join('')
-    :'<div style="color:var(--muted);font-size:13px">Nenhum resultado.</div>';
+  document.getElementById('cm-body').innerHTML=items.length?items.map(it=>`<div class="cm-item"><div class="cm-nome">${it.nome||'—'} <span style="color:var(--muted);font-size:10px;font-weight:400">${it.area?'· '+it.area:''} ${it.cargo?'· '+it.cargo:''}</span></div>${it.detalhe?`<div class="cm-detalhe">${it.detalhe.trim()}</div>`:''}</div>`).join(''):'<div class="cc-0">Nenhum resultado.</div>';
   document.getElementById('card-modal-overlay').classList.add('open');
 }
 function closeCardModal(){document.getElementById('card-modal-overlay').classList.remove('open');}
 
-function simNao(val){
-  return val===true?'<span class="badge badge-green">Sim</span>':'<span style="color:var(--muted);font-size:12px">Não</span>';
-}
+function simNao(v){return v===true?'<span class="badge b-green">Sim</span>':'<span style="color:var(--muted);font-size:11px">Não</span>';}
 
 function renderTabela(){
   const q=(document.getElementById('search')?.value||'').toLowerCase();
-  const f=data.filter(r=>(r.nome_completo||'').toLowerCase().includes(q)||(r.area||'').toLowerCase().includes(q)||(r.cargo||'').toLowerCase().includes(q));
-  document.getElementById('count-label').textContent=`${f.length} colaborador(es)`;
-  document.getElementById('tabela-body').innerHTML=f.map(r=>`
-    <tr>
-      <td><div style="font-weight:500">${r.nome_completo||'—'}</div><div style="color:var(--muted);font-size:11px;margin-top:2px">${r.email||''}</div></td>
-      <td><span class="badge badge-blue">${r.area||'—'}</span></td>
-      <td style="color:var(--muted)">${r.cargo||'—'}</td>
-      <td><span class="badge badge-yellow">${r.tempo_empresa||'—'}</span></td>
-      <td>${simNao(r.tem_filhos)}</td>
-      <td>${simNao(r.tem_pet)}</td>
-      <td>${r.restricao_alimentar&&r.restricao_alimentar!=='Não'?'<span class="badge badge-red">⚠️ Sim</span>':'<span style="color:var(--muted);font-size:12px">Não</span>'}</td>
-      <td style="color:var(--muted);font-size:12px">${new Date(r.criado_em).toLocaleDateString('pt-BR')} ${new Date(r.criado_em).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</td>
-      <td style="white-space:nowrap">
-        <button class="btn-sm btn-ver" onclick="openModal(${data.indexOf(r)})">Ver ficha</button>
-        <button class="btn-sm btn-del" onclick="confirmDelete('${r.id}','${(r.nome_completo||'').replace(/'/g,"\\'")}')">Excluir</button>
-      </td>
-    </tr>`).join('');
+  const f=filtered.filter(r=>(r.nome_completo||'').toLowerCase().includes(q)||(r.area||'').toLowerCase().includes(q)||(r.cargo||'').toLowerCase().includes(q));
+  const el=document.getElementById('count-label');if(el)el.textContent=`${f.length} colaborador(es)`;
+  const tb=document.getElementById('tabela-body');if(!tb)return;
+  tb.innerHTML=f.map(r=>`<tr>
+    <td><div style="font-weight:500">${r.nome_completo||'—'}</div><div style="color:var(--muted);font-size:10px;margin-top:1px">${r.email||''}</div></td>
+    <td><span class="badge b-blue">${r.area||'—'}</span></td>
+    <td style="color:var(--muted)">${r.cargo||'—'}</td>
+    <td><span class="badge b-yellow">${r.tempo_empresa||'—'}</span></td>
+    <td>${simNao(r.tem_filhos)}</td><td>${simNao(r.tem_pet)}</td>
+    <td>${r.restricao_alimentar&&r.restricao_alimentar!=='Não'?'<span class="badge b-red">⚠️ Sim</span>':'<span style="color:var(--muted);font-size:11px">Não</span>'}</td>
+    <td style="color:var(--muted);font-size:11px">${new Date(r.criado_em).toLocaleDateString('pt-BR')} ${new Date(r.criado_em).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</td>
+    <td style="white-space:nowrap"><button class="btn-sm" onclick="openModal(${rawData.indexOf(r)})">Ver ficha</button> <button class="btn-sm btn-del" onclick="confirmDelete('${r.id}','${(r.nome_completo||'').replace(/'/g,"\\'")}')">Excluir</button></td>
+  </tr>`).join('');
 }
 
-function confirmDelete(id,nome){
-  deleteId=id;
-  document.getElementById('confirm-txt').textContent=`Tem certeza que deseja excluir a ficha de ${nome}? Esta ação não pode ser desfeita.`;
-  document.getElementById('confirm-overlay').classList.add('open');
-}
+function confirmDelete(id,nome){deleteId=id;document.getElementById('confirm-txt').textContent=`Excluir a ficha de ${nome}? Esta ação não pode ser desfeita.`;document.getElementById('confirm-overlay').classList.add('open');}
 function closeConfirm(){document.getElementById('confirm-overlay').classList.remove('open');deleteId=null;}
 async function doDelete(){
   if(!deleteId)return;
-  try{
-    await fetch(`${SURL}/rest/v1/brasil_bitcoin_respostas?id=eq.${deleteId}`,
-      {method:'DELETE',headers:{'apikey':KEY,'Authorization':'Bearer '+KEY,'Prefer':'return=minimal'}});
-    data=data.filter(r=>r.id!==deleteId);
-    closeConfirm(); closeModal(); renderAll();
-  }catch(e){alert('Erro ao excluir.');}
+  await fetch(`${SURL}/rest/v1/brasil_bitcoin_respostas?id=eq.${deleteId}`,{method:'DELETE',headers:{'apikey':KEY,'Authorization':'Bearer '+KEY,'Prefer':'return=minimal'}});
+  rawData=rawData.filter(r=>r.id!==deleteId);closeConfirm();closeModal();applyFilters();
 }
 
-function mrow(lbl,val,full=false,cls=''){
-  if(val===null||val===undefined||val==='')return '';
-  let d=val;
-  if(val===true)d='✅ Sim';
-  else if(val===false)d='❌ Não';
-  else if(Array.isArray(val))d=val.length?val.join(', '):'—';
-  const tag=full?'mr-full':'mr';
-  return `<div class="${tag}"><div class="lbl">${lbl}</div><div class="val${cls?' '+cls:''}">${d}</div></div>`;
+function mrow(l,v,full=false,cls=''){
+  if(v===null||v===undefined||v==='')return '';
+  let d=v===true?'✅ Sim':v===false?'❌ Não':Array.isArray(v)?v.join(', '):v;
+  return `<div class="${full?'mr-full':'mr'}"><div class="lbl">${l}</div><div class="val${cls?' '+cls:''}">${d}</div></div>`;
 }
-
 function openModal(i){
-  const r=data[i];
+  const r=rawData[i];if(!r)return;
   document.getElementById('m-nome').textContent=r.nome_completo||'—';
   document.getElementById('m-sub').textContent=`${r.cargo||'—'} · ${r.area||'—'} · ${r.tempo_empresa||'—'}`;
-  const temRestr=r.restricao_alimentar&&r.restricao_alimentar!=='Não';
-  let html=`
+  const tr=r.restricao_alimentar&&r.restricao_alimentar!=='Não';
+  let h=`
   <div class="msec"><h3>Perfil Básico</h3><div class="mgrid">
-    ${mrow('E-mail',r.email)}${mrow('Área',r.area)}
-    ${mrow('Cargo',r.cargo)}${mrow('Tempo na empresa',r.tempo_empresa)}
-    ${mrow('Endereço',r.endereco,true)}
+    ${mrow('E-mail',r.email)}${mrow('Área',r.area)}${mrow('Cargo',r.cargo)}${mrow('Tempo',r.tempo_empresa)}${mrow('Endereço',r.endereco,true)}
   </div></div>
-  <div class="msec"><h3>Preferências Pessoais</h3><div class="mgrid">
-    ${mrow('Como se descreve',r.descricao_pessoal,true)}
-    ${mrow('Hobbies',r.hobbies,true)}
-    ${mrow('Estilos musicais',r.estilos_musica)}${mrow('Artista favorito',r.cantor_favorito)}
-    ${mrow('Esporte / Time',r.esportes_time)}${mrow('Comida preferida',r.comida_preferida)}
-    ${mrow('Bebida preferida',r.bebida_preferida)}${mrow('Tamanho camiseta',r.tamanho_camiseta)}
-    ${mrow('Preferências de presente',r.preferencias_presente,true)}
-    ${mrow('Presente específico',r.presente_especifico,true)}
-    ${mrow('Não gosta de ganhar',r.nao_gosta_ganhar,true)}
-    <div class="mr-full"><div class="lbl">Restrição alimentar</div>
-      <div class="val${temRestr?' val-alert':''}">${temRestr?`⚠️ Sim — ${r.restricao_alimentar}`:'✅ Não possui restrição'}</div>
-    </div>
+  <div class="msec"><h3>Preferências</h3><div class="mgrid">
+    ${mrow('Como se descreve',r.descricao_pessoal,true)}${mrow('Hobbies',r.hobbies,true)}
+    ${mrow('Músicas',r.estilos_musica)}${mrow('Artista favorito',r.cantor_favorito)}
+    ${mrow('Esporte/Time',r.esportes_time)}${mrow('Comida',r.comida_preferida)}
+    ${mrow('Bebida',r.bebida_preferida)}${mrow('Camiseta',r.tamanho_camiseta)}
+    ${mrow('Presentes',r.preferencias_presente,true)}${mrow('Presente específico',r.presente_especifico,true)}
+    ${mrow('Não gosta',r.nao_gosta_ganhar,true)}
+    <div class="mr-full"><div class="lbl">Restrição alimentar</div><div class="val${tr?' val-alert':''}">${tr?`⚠️ Sim — ${r.restricao_alimentar}`:'✅ Não'}</div></div>
   </div></div>
   <div class="msec"><h3>Família e Rotina</h3><div class="mgrid">
     ${mrow('Estado civil',r.estado_civil)}${mrow('Horário produtivo',r.horario_produtividade)}
     ${r.nome_parceiro?mrow('Parceiro(a)',r.nome_parceiro):''}${r.tempo_juntos?mrow('Juntos há',r.tempo_juntos):''}
-    <div class="mr"><div class="lbl">Tem filhos?</div><div class="val">${r.tem_filhos===true?'✅ Sim':'❌ Não'}</div></div>
-    ${r.tem_filhos?mrow('Qtd. filhos',r.qtd_filhos):''}
-    ${r.tem_filhos&&r.nomes_idades_filhos?mrow('Nomes e idades',r.nomes_idades_filhos,true):''}
-    ${r.tem_filhos&&r.filhos_gostam?mrow('Filhos gostam de',r.filhos_gostam,true):''}
-    <div class="mr"><div class="lbl">Tem pet?</div><div class="val">${r.tem_pet===true?'✅ Sim':'❌ Não'}</div></div>
-    ${r.tem_pet&&r.tipo_pet?mrow('Tipo de pet',r.tipo_pet):''}
-    ${r.tem_pet&&r.nome_pet?mrow('Nome do pet',r.nome_pet):''}
+    <div class="mr"><div class="lbl">Filhos?</div><div class="val">${r.tem_filhos===true?'✅ Sim':'❌ Não'}</div></div>
+    ${r.tem_filhos?mrow('Qtd.',r.qtd_filhos):''}
+    ${r.nomes_idades_filhos?mrow('Nomes/idades',r.nomes_idades_filhos,true):''}
+    ${r.filhos_gostam?mrow('Gostam de',r.filhos_gostam,true):''}
+    <div class="mr"><div class="lbl">Pet?</div><div class="val">${r.tem_pet===true?'✅ Sim':'❌ Não'}</div></div>
+    ${r.tipo_pet?mrow('Tipo',r.tipo_pet):''}${r.nome_pet?mrow('Nome',r.nome_pet):''}
   </div></div>
-  <div class="msec"><h3>Motivação e Reconhecimento</h3><div class="mgrid">
-    ${mrow('O que motiva',r.o_que_motiva,true)}
-    ${mrow('Se sente valorizado?',r.sente_valorizado,true)}
-    ${mrow('O que dá gás',r.o_que_da_gas,true)}
+  <div class="msec"><h3>Motivação</h3><div class="mgrid">
+    ${mrow('O que motiva',r.o_que_motiva,true)}${mrow('Se sente valorizado?',r.sente_valorizado,true)}${mrow('O que dá gás',r.o_que_da_gas,true)}
   </div></div>
   <div class="msec"><h3>Desenvolvimento</h3><div class="mgrid">
-    ${mrow('Interesse em liderança',r.interesse_lideranca)}
-    ${mrow('Tipos de treinamento',r.tipos_treinamento)}
-    ${mrow('Treinamento específico',r.treinamento_especifico,true)}
+    ${mrow('Interesse em liderança',r.interesse_lideranca)}${mrow('Treinamentos',r.tipos_treinamento)}${mrow('Específico',r.treinamento_especifico,true)}
   </div></div>
-  <div class="msec"><h3>Cultura e Propósito</h3><div class="mgrid">
-    ${mrow('O que faz permanecer',r.o_que_faz_permanecer,true)}
-    ${mrow('Melhorar na empresa',r.melhorar_empresa,true)}
-    ${mrow('Sugestão para o time',r.sugestao_time,true)}
+  <div class="msec"><h3>Cultura</h3><div class="mgrid">
+    ${mrow('O que faz permanecer',r.o_que_faz_permanecer,true)}${mrow('Melhoraria',r.melhorar_empresa,true)}${mrow('Sugestão',r.sugestao_time,true)}
   </div></div>`;
-  if(r.momento_pessoal||r.momento_empresa||(r.datas_especiais&&r.datas_especiais.length)){
-    html+=`<div class="msec"><h3>Momentos Especiais</h3><div class="mgrid">
-      ${mrow('Momento pessoal',r.momento_pessoal,true)}${mrow('Momento na empresa',r.momento_empresa,true)}
-      ${mrow('Datas especiais',r.datas_especiais,true)}${mrow('Detalhes',r.detalhe_datas,true)}
-    </div></div>`;
-  }
-  if(r.fotos_urls&&r.fotos_urls.length){
-    html+=`<div class="msec"><h3>Fotos Enviadas</h3><div class="foto-grid">
-      ${r.fotos_urls.map((u,j)=>`<div class="foto-item">
-        <a href="${u}" target="_blank"><img src="${u}" onerror="this.style.display='none'" alt="Foto ${j+1}"></a>
-        <a class="foto-dl" href="${u}" download target="_blank">⬇ Baixar</a>
-      </div>`).join('')}
-    </div></div>`;
-  } else {
-    html+=`<div class="msec"><h3>Fotos</h3><div style="color:var(--muted);font-size:13px">Nenhuma foto enviada.</div></div>`;
-  }
-  document.getElementById('m-body').innerHTML=html;
+  if(r.momento_pessoal||r.momento_empresa||(r.datas_especiais?.length)){h+=`<div class="msec"><h3>Momentos Especiais</h3><div class="mgrid">
+    ${mrow('Pessoal',r.momento_pessoal,true)}${mrow('Na empresa',r.momento_empresa,true)}${mrow('Datas',r.datas_especiais,true)}${mrow('Detalhes',r.detalhe_datas,true)}
+  </div></div>`;}
+  if(r.fotos_urls?.length){h+=`<div class="msec"><h3>Fotos</h3><div class="foto-grid">${r.fotos_urls.map((u,j)=>`<div class="foto-item"><a href="${u}" target="_blank"><img src="${u}" onerror="this.style.display='none'"></a><a class="foto-dl" href="${u}" download target="_blank">⬇ Baixar</a></div>`).join('')}</div></div>`;}
+  else h+=`<div class="msec"><h3>Fotos</h3><div style="color:var(--muted);font-size:12px">Nenhuma foto enviada.</div></div>`;
+  document.getElementById('m-body').innerHTML=h;
   document.getElementById('modal-overlay').classList.add('open');
 }
 function closeModal(){document.getElementById('modal-overlay').classList.remove('open');}
