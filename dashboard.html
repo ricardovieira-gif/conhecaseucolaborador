@@ -15,97 +15,74 @@
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--dark);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;min-height:100vh;}
-
-/* LOGIN */
 #login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;
-  background:radial-gradient(ellipse 80% 60% at 20% 60%,rgba(59,111,255,.1) 0%,transparent 60%),
-             radial-gradient(ellipse 60% 40% at 80% 20%,rgba(155,109,255,.06) 0%,transparent 50%),
-             var(--dark);}
+  background:radial-gradient(ellipse 80% 60% at 20% 60%,rgba(59,111,255,.1) 0%,transparent 60%),var(--dark);}
 .lb{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:52px 44px;width:100%;max-width:380px;text-align:center;}
 .lb-brand{font-size:11px;font-weight:500;letter-spacing:.25em;text-transform:uppercase;color:var(--blue);margin-bottom:36px;opacity:.8;}
-.lb h1{font-family:'Fraunces',serif;font-size:28px;font-weight:900;margin-bottom:6px;letter-spacing:-.02em;}
+.lb h1{font-family:'Fraunces',serif;font-size:28px;font-weight:900;margin-bottom:6px;}
 .lb p{color:var(--muted);font-size:13px;margin-bottom:36px;}
 .li{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:12px;padding:13px 16px;color:white;font-size:14px;font-family:'DM Sans',sans-serif;margin-bottom:10px;outline:none;transition:border-color .2s;}
 .li:focus{border-color:var(--blue);}
-.lb-btn{width:100%;background:var(--blue);color:white;border:none;border-radius:12px;padding:13px;font-size:14px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;margin-top:6px;transition:opacity .2s;}
+.lb-btn{width:100%;background:var(--blue);color:white;border:none;border-radius:12px;padding:13px;font-size:14px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;margin-top:6px;}
 .lb-btn:hover{opacity:.85;}
 .lb-err{color:var(--red);font-size:13px;margin-top:10px;display:none;}
-
-/* LAYOUT */
 #dashboard{display:none;}
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 36px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(7,8,15,.96);backdrop-filter:blur(16px);z-index:200;}
 .tb-left{display:flex;align-items:center;gap:20px;}
 .tb-brand{font-size:11px;font-weight:500;letter-spacing:.25em;text-transform:uppercase;color:var(--blue);opacity:.8;}
-.tb-title{font-family:'Fraunces',serif;font-size:16px;font-weight:700;letter-spacing:-.01em;}
+.tb-title{font-family:'Fraunces',serif;font-size:16px;font-weight:700;}
 .tb-right{display:flex;align-items:center;gap:10px;}
 .tb-time{font-size:12px;color:var(--muted);}
-.out-btn{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:6px 14px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.sync-badge{font-size:11px;color:var(--green);background:rgba(45,212,160,.1);border:1px solid rgba(45,212,160,.2);border-radius:20px;padding:3px 10px;}
+.out-btn{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:6px 14px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;}
 .out-btn:hover{border-color:rgba(255,255,255,.3);color:white;}
-
 .tabs{display:flex;gap:2px;padding:0 36px;border-bottom:1px solid var(--border);background:var(--dark);}
-.tab{padding:14px 22px;font-size:13px;font-weight:400;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);transition:all .2s;letter-spacing:.01em;}
+.tab{padding:14px 22px;font-size:13px;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);transition:all .2s;}
 .tab.active{color:white;border-bottom-color:var(--blue);}
-.tab:hover:not(.active){color:rgba(255,255,255,.6);}
-
 .main{padding:28px 36px;max-width:1440px;margin:0 auto;}
-
-/* STATS */
 .stats-row{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:24px;}
-.sc{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px 18px;position:relative;overflow:hidden;transition:border-color .2s;}
-.sc:hover{border-color:rgba(255,255,255,.12);}
+.sc{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px 18px;position:relative;overflow:hidden;cursor:pointer;transition:border-color .2s,transform .15s;}
+.sc:hover{border-color:rgba(255,255,255,.15);transform:translateY(-1px);}
 .sc-icon{font-size:20px;margin-bottom:10px;}
-.sc-val{font-family:'Fraunces',serif;font-size:32px;font-weight:900;line-height:1;letter-spacing:-.02em;}
-.sc-label{font-size:11px;color:var(--muted);margin-top:6px;letter-spacing:.03em;}
+.sc-val{font-family:'Fraunces',serif;font-size:32px;font-weight:900;line-height:1;}
+.sc-label{font-size:11px;color:var(--muted);margin-top:6px;}
+.sc-hint{font-size:10px;color:var(--blue);margin-top:4px;opacity:.7;}
 .sc-bar{position:absolute;bottom:0;left:0;height:2px;background:var(--blue);}
 .sc-bar.yellow{background:var(--yellow);}
 .sc-bar.green{background:var(--green);}
 .sc-bar.purple{background:var(--purple);}
 .sc-bar.red{background:var(--red);}
-
-/* ANIVERSÁRIOS */
-.aniv-card{background:linear-gradient(135deg,rgba(59,111,255,.12) 0%,rgba(155,109,255,.06) 100%);border:1px solid rgba(59,111,255,.2);border-radius:16px;padding:20px;margin-bottom:24px;}
+.aniv-card{background:linear-gradient(135deg,rgba(59,111,255,.1) 0%,rgba(155,109,255,.05) 100%);border:1px solid rgba(59,111,255,.18);border-radius:16px;padding:20px;margin-bottom:24px;}
 .aniv-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
 .aniv-title{font-family:'Fraunces',serif;font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px;}
-.aniv-badge{background:var(--blue);color:white;border-radius:20px;padding:2px 10px;font-size:11px;font-weight:500;}
+.aniv-badge{background:var(--blue);color:white;border-radius:20px;padding:2px 10px;font-size:11px;}
 .aniv-list{display:flex;flex-wrap:wrap;gap:10px;}
-.aniv-item{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:12px;min-width:200px;}
+.aniv-item{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:12px;}
 .aniv-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:14px;font-weight:700;flex-shrink:0;}
-.aniv-info{}
 .aniv-nome{font-size:13px;font-weight:500;}
 .aniv-data{font-size:11px;color:var(--muted);margin-top:2px;}
 .aniv-dias{font-size:11px;color:var(--yellow);margin-top:1px;}
-.aniv-empty{color:var(--muted);font-size:13px;font-style:italic;}
-
-/* CHARTS GRID */
 .cg{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px;}
 .cg2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
 .cc{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;}
-.cc.span2{grid-column:span 2;}
-.cc.span3{grid-column:span 3;}
-.cc-title{font-size:12px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
-.cc-sub{font-family:'Fraunces',serif;font-size:16px;font-weight:700;margin-bottom:18px;letter-spacing:-.01em;}
-.cc-pct{font-size:11px;color:var(--blue);font-weight:500;}
-
-/* INSIGHT BARS */
+.cc-title{font-size:11px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
+.cc-sub{font-family:'Fraunces',serif;font-size:16px;font-weight:700;margin-bottom:18px;}
+/* INSIGHT BARS HORIZONTAL */
 .ilist{display:flex;flex-direction:column;gap:11px;}
 .irow{display:flex;align-items:center;gap:10px;}
 .ilabel{min-width:130px;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.ibar-wrap{flex:1;background:rgba(255,255,255,.05);border-radius:3px;height:6px;}
-.ibar{height:6px;border-radius:3px;background:var(--blue);transition:width .8s cubic-bezier(.4,0,.2,1);}
+.ibar-wrap{flex:1;background:rgba(255,255,255,.05);border-radius:3px;height:7px;}
+.ibar{height:7px;border-radius:3px;background:var(--blue);transition:width .8s cubic-bezier(.4,0,.2,1);}
 .inum{font-size:12px;font-weight:500;min-width:24px;text-align:right;}
-.ipct{font-size:11px;color:var(--muted);min-width:32px;text-align:right;}
-
-/* TRIPLE STATS (filhos/pet/restrição) */
+.ipct{font-size:11px;color:var(--muted);min-width:36px;text-align:right;}
 .triple{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;}
 .triple-item{text-align:center;padding:16px 12px;border-right:1px solid var(--border);}
 .triple-item:last-child{border-right:none;}
 .triple-val{font-family:'Fraunces',serif;font-size:28px;font-weight:900;}
 .triple-pct{font-size:11px;color:var(--muted);margin-top:2px;}
 .triple-label{font-size:11px;color:var(--muted);margin-top:6px;}
-
-/* TABELA */
 .search-row{display:flex;gap:10px;margin-bottom:16px;align-items:center;}
-.search-inp{flex:1;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:10px 16px;color:white;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;}
+.search-inp{flex:1;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:10px 16px;color:white;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;}
 .search-inp:focus{border-color:var(--blue);}
 .tw{overflow-x:auto;}
 table{width:100%;border-collapse:collapse;}
@@ -123,26 +100,22 @@ tr:hover td{background:rgba(255,255,255,.015);}
 .btn-ver:hover{border-color:var(--blue);color:white;}
 .btn-del{color:var(--muted);margin-left:4px;}
 .btn-del:hover{border-color:var(--red);color:var(--red);}
-
-/* RESPOSTAS ABERTAS */
 .ra-list{display:flex;flex-direction:column;gap:8px;max-height:280px;overflow-y:auto;padding-right:4px;}
 .ra-list::-webkit-scrollbar{width:3px;}
-.ra-list::-webkit-scrollbar-track{background:transparent;}
 .ra-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:3px;}
 .ra-item{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:12px 14px;}
 .ra-autor{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px;}
-.ra-txt{font-size:13px;line-height:1.6;color:var(--text);}
-
-/* MODAL */
+.ra-txt{font-size:13px;line-height:1.6;}
+/* MODAL FICHA */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(8px);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;}
 .modal-overlay.open{display:flex;}
 .modal{background:var(--card2);border:1px solid var(--border);border-radius:22px;width:100%;max-width:780px;max-height:92vh;overflow-y:auto;}
 .modal::-webkit-scrollbar{width:3px;}
 .modal::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:3px;}
 .mh{padding:24px 30px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;position:sticky;top:0;background:var(--card2);z-index:10;}
-.mh h2{font-family:'Fraunces',serif;font-size:22px;font-weight:900;letter-spacing:-.02em;}
+.mh h2{font-family:'Fraunces',serif;font-size:22px;font-weight:900;}
 .mh .msub{color:var(--muted);font-size:12px;margin-top:4px;}
-.mclose{background:none;border:1px solid var(--border);border-radius:8px;width:32px;height:32px;color:var(--muted);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
+.mclose{background:none;border:1px solid var(--border);border-radius:8px;width:32px;height:32px;color:var(--muted);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .mclose:hover{border-color:rgba(255,255,255,.3);color:white;}
 .mbody{padding:24px 30px;}
 .msec{margin-bottom:26px;}
@@ -154,11 +127,19 @@ tr:hover td{background:rgba(255,255,255,.015);}
 .mr .val,.mr-full .val{font-size:13px;line-height:1.6;}
 .val-alert{color:var(--red);}
 .foto-grid{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;}
-.foto-item img{width:110px;height:110px;object-fit:cover;border-radius:10px;border:1px solid var(--border);display:block;transition:opacity .2s;}
-.foto-item img:hover{opacity:.85;}
-.foto-dl{display:block;text-align:center;font-size:10px;color:var(--blue);margin-top:4px;text-decoration:none;letter-spacing:.02em;}
-
-/* CONFIRM MODAL */
+.foto-item img{width:110px;height:110px;object-fit:cover;border-radius:10px;border:1px solid var(--border);display:block;}
+.foto-dl{display:block;text-align:center;font-size:10px;color:var(--blue);margin-top:4px;text-decoration:none;}
+/* MODAL CARD (drill-down) */
+.card-modal{background:var(--card2);border:1px solid var(--border);border-radius:22px;width:100%;max-width:640px;max-height:85vh;overflow-y:auto;}
+.card-modal::-webkit-scrollbar{width:3px;}
+.card-modal::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:3px;}
+.cm-header{padding:22px 28px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--card2);}
+.cm-title{font-family:'Fraunces',serif;font-size:18px;font-weight:900;}
+.cm-body{padding:20px 28px;}
+.cm-item{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.cm-nome{font-size:13px;font-weight:500;margin-bottom:6px;}
+.cm-detalhe{font-size:12px;color:var(--muted);line-height:1.6;}
+/* CONFIRM */
 .confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);backdrop-filter:blur(8px);z-index:2000;display:none;align-items:center;justify-content:center;}
 .confirm-overlay.open{display:flex;}
 .confirm-box{background:var(--card2);border:1px solid rgba(240,80,110,.2);border-radius:18px;padding:36px;width:100%;max-width:380px;text-align:center;}
@@ -166,22 +147,18 @@ tr:hover td{background:rgba(255,255,255,.015);}
 .confirm-box h3{font-family:'Fraunces',serif;font-size:20px;font-weight:900;margin-bottom:8px;}
 .confirm-box p{color:var(--muted);font-size:13px;margin-bottom:28px;line-height:1.6;}
 .confirm-btns{display:flex;gap:10px;}
-.confirm-cancel{flex:1;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:10px;padding:12px;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.confirm-cancel{flex:1;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:10px;padding:12px;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;}
 .confirm-cancel:hover{border-color:rgba(255,255,255,.3);color:white;}
-.confirm-del{flex:1;background:var(--red);color:white;border:none;border-radius:10px;padding:12px;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:opacity .2s;}
-.confirm-del:hover{opacity:.85;}
-
+.confirm-del{flex:1;background:var(--red);color:white;border:none;border-radius:10px;padding:12px;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;}
 .loading{text-align:center;padding:80px;color:var(--muted);}
 .tab-pane{display:none;}
 .tab-pane.active{display:block;}
-
 @media(max-width:1100px){.stats-row{grid-template-columns:repeat(3,1fr);}.cg{grid-template-columns:1fr 1fr;}}
-@media(max-width:720px){.stats-row{grid-template-columns:1fr 1fr;}.cg{grid-template-columns:1fr;}.cg2{grid-template-columns:1fr;}.main{padding:16px;}.mgrid{grid-template-columns:1fr;}}
+@media(max-width:720px){.stats-row{grid-template-columns:1fr 1fr;}.cg,.cg2{grid-template-columns:1fr;}.main{padding:16px;}.mgrid{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
 <div id="login-screen">
   <div class="lb">
     <div class="lb-brand">Brasil Bitcoin</div>
@@ -194,7 +171,6 @@ tr:hover td{background:rgba(255,255,255,.015);}
   </div>
 </div>
 
-<!-- DASHBOARD -->
 <div id="dashboard">
   <div class="topbar">
     <div class="tb-left">
@@ -202,6 +178,7 @@ tr:hover td{background:rgba(255,255,255,.015);}
       <div class="tb-title">Dashboard RH</div>
     </div>
     <div class="tb-right">
+      <div class="sync-badge" id="sync-badge">● Ao vivo</div>
       <div class="tb-time" id="relogio"></div>
       <button class="out-btn" onclick="doLogout()">Sair</button>
     </div>
@@ -215,20 +192,41 @@ tr:hover td{background:rgba(255,255,255,.015);}
     <div id="loading" class="loading">Carregando dados...</div>
     <div id="content" style="display:none">
 
-      <!-- VISÃO GERAL -->
       <div id="tab-visao" class="tab-pane active">
-
         <div class="stats-row">
-          <div class="sc"><div class="sc-icon">👥</div><div class="sc-val" id="s-total">—</div><div class="sc-label">Colaboradores</div><div class="sc-bar" style="width:100%"></div></div>
-          <div class="sc"><div class="sc-icon">🏢</div><div class="sc-val" style="font-size:20px" id="s-area">—</div><div class="sc-label" id="s-area-n">área líder</div><div class="sc-bar yellow" style="width:100%"></div></div>
-          <div class="sc"><div class="sc-icon">👶</div><div class="sc-val" id="s-filhos">—</div><div class="sc-label">Com filhos</div><div class="sc-bar green" style="width:100%"></div></div>
-          <div class="sc"><div class="sc-icon">🐾</div><div class="sc-val" id="s-pet">—</div><div class="sc-label">Com pet</div><div class="sc-bar purple" style="width:100%"></div></div>
-          <div class="sc"><div class="sc-icon">⚠️</div><div class="sc-val" id="s-restricao">—</div><div class="sc-label">Restrição alim.</div><div class="sc-bar red" style="width:100%"></div></div>
-          <div class="sc"><div class="sc-icon">🚀</div><div class="sc-val" id="s-lider">—</div><div class="sc-label">Interesse liderança</div><div class="sc-bar" style="width:100%"></div></div>
+          <div class="sc" onclick="openCardModal('total')">
+            <div class="sc-icon">👥</div><div class="sc-val" id="s-total">—</div>
+            <div class="sc-label">Colaboradores</div><div class="sc-hint">Clique para ver todos</div>
+            <div class="sc-bar" style="width:100%"></div>
+          </div>
+          <div class="sc" onclick="openCardModal('area')">
+            <div class="sc-icon">🏢</div><div class="sc-val" style="font-size:20px" id="s-area">—</div>
+            <div class="sc-label" id="s-area-n">área líder</div><div class="sc-hint">Clique para ver por área</div>
+            <div class="sc-bar yellow" style="width:100%"></div>
+          </div>
+          <div class="sc" onclick="openCardModal('filhos')">
+            <div class="sc-icon">👶</div><div class="sc-val" id="s-filhos">—</div>
+            <div class="sc-label">Com filhos</div><div class="sc-hint">Clique para ver quem</div>
+            <div class="sc-bar green" style="width:100%"></div>
+          </div>
+          <div class="sc" onclick="openCardModal('pet')">
+            <div class="sc-icon">🐾</div><div class="sc-val" id="s-pet">—</div>
+            <div class="sc-label">Com pet</div><div class="sc-hint">Clique para ver quem</div>
+            <div class="sc-bar purple" style="width:100%"></div>
+          </div>
+          <div class="sc" onclick="openCardModal('restricao')">
+            <div class="sc-icon">⚠️</div><div class="sc-val" id="s-restricao">—</div>
+            <div class="sc-label">Restrição alim.</div><div class="sc-hint">Clique para ver quem</div>
+            <div class="sc-bar red" style="width:100%"></div>
+          </div>
+          <div class="sc" onclick="openCardModal('lider')">
+            <div class="sc-icon">🚀</div><div class="sc-val" id="s-lider">—</div>
+            <div class="sc-label">Interesse liderança</div><div class="sc-hint">Clique para ver quem</div>
+            <div class="sc-bar" style="width:100%"></div>
+          </div>
         </div>
 
-        <!-- ANIVERSÁRIOS -->
-        <div class="aniv-card" id="aniv-card">
+        <div class="aniv-card">
           <div class="aniv-header">
             <div class="aniv-title">🎂 Próximos aniversários <span class="aniv-badge" id="aniv-mes"></span></div>
             <div style="font-size:11px;color:var(--muted)" id="aniv-prox-label"></div>
@@ -237,40 +235,17 @@ tr:hover td{background:rgba(255,255,255,.015);}
         </div>
 
         <div class="cg">
-          <div class="cc">
-            <div class="cc-title">Distribuição</div>
-            <div class="cc-sub">Por Área</div>
-            <canvas id="c-area" height="190"></canvas>
+          <div class="cc"><div class="cc-title">Distribuição</div><div class="cc-sub">Por Área</div><canvas id="c-area" height="190"></canvas></div>
+          <div class="cc"><div class="cc-title">Tempo na empresa</div><div class="cc-sub">Senioridade do time</div><canvas id="c-tempo" height="190"></canvas></div>
+          <div class="cc"><div class="cc-title">Estado Civil</div><div class="cc-sub">Perfil familiar</div><canvas id="c-civil" height="190"></canvas></div>
+          <div class="cc"><div class="cc-title">Horário produtivo</div><div class="cc-sub">Pico do time</div>
+            <div class="ilist" id="i-horario"></div>
           </div>
-          <div class="cc">
-            <div class="cc-title">Tempo na empresa</div>
-            <div class="cc-sub">Senioridade do time</div>
-            <canvas id="c-tempo" height="190"></canvas>
-          </div>
-          <div class="cc">
-            <div class="cc-title">Estado Civil</div>
-            <div class="cc-sub">Perfil familiar</div>
-            <canvas id="c-civil" height="190"></canvas>
-          </div>
-          <div class="cc">
-            <div class="cc-title">Horário produtivo</div>
-            <div class="cc-sub">Pico do time</div>
-            <canvas id="c-horario" height="190"></canvas>
-          </div>
-          <div class="cc">
-            <div class="cc-title">Preferências de Presente</div>
-            <div class="cc-sub">Para ações de RH</div>
-            <div class="ilist" id="i-presente"></div>
-          </div>
-          <div class="cc">
-            <div class="cc-title">Estilos Musicais</div>
-            <div class="cc-sub">Top preferências</div>
-            <div class="ilist" id="i-musica"></div>
-          </div>
+          <div class="cc"><div class="cc-title">Preferências de Presente</div><div class="cc-sub">Para ações de RH</div><div class="ilist" id="i-presente"></div></div>
+          <div class="cc"><div class="cc-title">Estilos Musicais</div><div class="cc-sub">Top preferências</div><div class="ilist" id="i-musica"></div></div>
         </div>
       </div>
 
-      <!-- COLABORADORES -->
       <div id="tab-colaboradores" class="tab-pane">
         <div class="cc">
           <div class="search-row">
@@ -279,81 +254,38 @@ tr:hover td{background:rgba(255,255,255,.015);}
           </div>
           <div class="tw">
             <table>
-              <thead><tr>
-                <th>Nome</th><th>Área</th><th>Cargo</th><th>Tempo</th>
-                <th>Filhos</th><th>Pet</th><th>Restrição</th><th>Enviado em</th><th></th>
-              </tr></thead>
+              <thead><tr><th>Nome</th><th>Área</th><th>Cargo</th><th>Tempo</th><th>Filhos</th><th>Pet</th><th>Restrição</th><th>Enviado em</th><th></th></tr></thead>
               <tbody id="tabela-body"></tbody>
             </table>
           </div>
         </div>
       </div>
 
-      <!-- BEM-ESTAR -->
       <div id="tab-wellbeing" class="tab-pane">
         <div class="cg">
-          <div class="cc">
-            <div class="cc-title">Liderança</div>
-            <div class="cc-sub">Interesse declarado</div>
-            <canvas id="c-lider" height="190"></canvas>
-          </div>
-          <div class="cc">
-            <div class="cc-title">Treinamentos</div>
-            <div class="cc-sub">Mais desejados</div>
-            <div class="ilist" id="i-treino"></div>
-          </div>
-          <div class="cc">
-            <div class="cc-title">Camiseta</div>
-            <div class="cc-sub">Para brindes e kits</div>
-            <canvas id="c-camisa" height="190"></canvas>
-          </div>
+          <div class="cc"><div class="cc-title">Liderança</div><div class="cc-sub">Interesse declarado</div><div class="ilist" id="i-lider"></div></div>
+          <div class="cc"><div class="cc-title">Treinamentos</div><div class="cc-sub">Mais desejados</div><div class="ilist" id="i-treino"></div></div>
+          <div class="cc"><div class="cc-title">Camiseta</div><div class="cc-sub">Para brindes e kits</div><div class="ilist" id="i-camisa"></div></div>
         </div>
         <div class="cg2">
           <div class="cc">
-            <div class="cc-title">Família & Pets</div>
-            <div class="cc-sub">Composição do time</div>
+            <div class="cc-title">Família & Pets</div><div class="cc-sub">Composição do time</div>
             <div class="triple" style="margin-top:8px">
-              <div class="triple-item">
-                <div class="triple-val" id="t-filhos-n">—</div>
-                <div class="triple-pct" id="t-filhos-p"></div>
-                <div class="triple-label">👶 Com filhos</div>
-              </div>
-              <div class="triple-item">
-                <div class="triple-val" id="t-pet-n">—</div>
-                <div class="triple-pct" id="t-pet-p"></div>
-                <div class="triple-label">🐾 Com pet</div>
-              </div>
-              <div class="triple-item">
-                <div class="triple-val" id="t-restricao-n">—</div>
-                <div class="triple-pct" id="t-restricao-p"></div>
-                <div class="triple-label">⚠️ Restrição alim.</div>
-              </div>
+              <div class="triple-item"><div class="triple-val" id="t-filhos-n">—</div><div class="triple-pct" id="t-filhos-p"></div><div class="triple-label">👶 Com filhos</div></div>
+              <div class="triple-item"><div class="triple-val" id="t-pet-n">—</div><div class="triple-pct" id="t-pet-p"></div><div class="triple-label">🐾 Com pet</div></div>
+              <div class="triple-item"><div class="triple-val" id="t-restricao-n">—</div><div class="triple-pct" id="t-restricao-p"></div><div class="triple-label">⚠️ Restrição</div></div>
             </div>
-            <div style="margin-top:16px"><canvas id="c-filhos-pet" height="130"></canvas></div>
+            <div style="margin-top:20px"><div class="ilist" id="i-familia"></div></div>
           </div>
           <div class="cc">
-            <div class="cc-title">Colaboradores com restrição alimentar</div>
-            <div class="cc-sub">Lista para eventos</div>
+            <div class="cc-title">Restrições alimentares</div><div class="cc-sub">Lista para eventos</div>
             <div id="lista-restricao" style="margin-top:4px"></div>
           </div>
         </div>
-        <div class="cc" style="margin-bottom:16px">
-          <div class="cc-title">Motivação</div>
-          <div class="cc-sub">O que motiva o time</div>
-          <div class="ra-list" id="motivacoes"></div>
-        </div>
-        <div class="cc" style="margin-bottom:16px">
-          <div class="cc-title">Retenção</div>
-          <div class="cc-sub">O que os faz permanecer</div>
-          <div class="ra-list" id="permanecer"></div>
-        </div>
-        <div class="cc">
-          <div class="cc-title">Sugestões</div>
-          <div class="cc-sub">Do time para o time</div>
-          <div class="ra-list" id="sugestoes"></div>
-        </div>
+        <div class="cc" style="margin-bottom:16px"><div class="cc-title">Motivação</div><div class="cc-sub">O que motiva o time</div><div class="ra-list" id="motivacoes"></div></div>
+        <div class="cc" style="margin-bottom:16px"><div class="cc-title">Retenção</div><div class="cc-sub">O que os faz permanecer</div><div class="ra-list" id="permanecer"></div></div>
+        <div class="cc"><div class="cc-title">Sugestões</div><div class="cc-sub">Do time para o time</div><div class="ra-list" id="sugestoes"></div></div>
       </div>
-
     </div>
   </div>
 </div>
@@ -361,11 +293,20 @@ tr:hover td{background:rgba(255,255,255,.015);}
 <!-- MODAL FICHA -->
 <div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
   <div class="modal">
-    <div class="mh">
-      <div><h2 id="m-nome">—</h2><div class="msub" id="m-sub">—</div></div>
-      <button class="mclose" onclick="closeModal()">×</button>
-    </div>
+    <div class="mh"><div><h2 id="m-nome">—</h2><div class="msub" id="m-sub">—</div></div>
+      <button class="mclose" onclick="closeModal()">×</button></div>
     <div class="mbody" id="m-body"></div>
+  </div>
+</div>
+
+<!-- MODAL CARD DRILL-DOWN -->
+<div class="modal-overlay" id="card-modal-overlay" onclick="if(event.target===this)closeCardModal()">
+  <div class="card-modal">
+    <div class="cm-header">
+      <div class="cm-title" id="cm-title">—</div>
+      <button class="mclose" onclick="closeCardModal()">×</button>
+    </div>
+    <div class="cm-body" id="cm-body"></div>
   </div>
 </div>
 
@@ -374,7 +315,7 @@ tr:hover td{background:rgba(255,255,255,.015);}
   <div class="confirm-box">
     <div class="confirm-icon">🗑️</div>
     <h3>Excluir ficha?</h3>
-    <p id="confirm-txt">Esta ação não pode ser desfeita. A ficha do colaborador será removida permanentemente.</p>
+    <p id="confirm-txt">Esta ação não pode ser desfeita.</p>
     <div class="confirm-btns">
       <button class="confirm-cancel" onclick="closeConfirm()">Cancelar</button>
       <button class="confirm-del" onclick="doDelete()">Sim, excluir</button>
@@ -383,11 +324,17 @@ tr:hover td{background:rgba(255,255,255,.015);}
 </div>
 
 <script>
-const URL='https://cxauptpngygewxlcgatt.supabase.co';
+const SURL='https://cxauptpngygewxlcgatt.supabase.co';
 const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4YXVwdHBuZ3lnZXd4bGNnYXR0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA0OTczODMsImV4cCI6MjA4NjA3MzM4M30.g3U18WQ1yIacc6mFGkhmRUosC7gHPfttcDSMaBS7d5I';
 const USERS={'rh':'brasilbitcoin2024','admin':'bbadmin2024'};
 const C=['#3B6FFF','#F5C842','#2DD4A0','#F0506E','#9B6DFF','#F97316','#06B6D4','#84CC16','#EC4899','#A78BFA'];
-let data=[],charts={},deleteId=null;
+const MESES=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+let data=[],charts={},deleteId=null,autoRefreshTimer=null;
+
+// SESSION PERSISTENCE
+function saveSession(u){sessionStorage.setItem('bb_rh_user',u);}
+function getSession(){return sessionStorage.getItem('bb_rh_user');}
+function clearSession(){sessionStorage.removeItem('bb_rh_user');}
 
 // RELÓGIO
 function tick(){
@@ -398,29 +345,52 @@ function tick(){
 }
 tick(); setInterval(tick,1000);
 
+// AUTO-REFRESH a cada 10 minutos
+function startAutoRefresh(){
+  if(autoRefreshTimer)clearInterval(autoRefreshTimer);
+  autoRefreshTimer=setInterval(()=>{
+    document.getElementById('sync-badge').textContent='↻ Atualizando...';
+    load(true);
+  },10*60*1000);
+}
+
+window.addEventListener('load',()=>{
+  const u=getSession();
+  if(u&&USERS[u]){
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('dashboard').style.display='block';
+    load();
+  }
+});
+
 function doLogin(){
   const u=document.getElementById('lu').value.trim();
   const p=document.getElementById('lp').value;
   if(USERS[u]&&USERS[u]===p){
+    saveSession(u);
     document.getElementById('login-screen').style.display='none';
     document.getElementById('dashboard').style.display='block';
     load();
   } else document.getElementById('lerr').style.display='block';
 }
 function doLogout(){
+  clearSession();
+  if(autoRefreshTimer)clearInterval(autoRefreshTimer);
   document.getElementById('dashboard').style.display='none';
   document.getElementById('login-screen').style.display='flex';
-  document.getElementById('lu').value='';document.getElementById('lp').value='';
 }
 
-async function load(){
+async function load(silent=false){
+  if(!silent){document.getElementById('loading').style.display='block';document.getElementById('content').style.display='none';}
   try{
-    const r=await fetch(`${URL}/rest/v1/brasil_bitcoin_respostas?select=*&order=criado_em.desc`,
+    const r=await fetch(`${SURL}/rest/v1/brasil_bitcoin_respostas?select=*&order=criado_em.desc`,
       {headers:{'apikey':KEY,'Authorization':'Bearer '+KEY}});
     data=await r.json();
     document.getElementById('loading').style.display='none';
     document.getElementById('content').style.display='block';
+    document.getElementById('sync-badge').textContent='● Ao vivo';
     renderAll();
+    startAutoRefresh();
   }catch(e){document.getElementById('loading').textContent='Erro ao carregar.';}
 }
 
@@ -435,36 +405,25 @@ function showTab(t){
 function cnt(k){const m={};data.forEach(r=>{const v=r[k]||'Não informado';m[v]=(m[v]||0)+1;});return m;}
 function cntArr(k){const m={};data.forEach(r=>{(r[k]||[]).forEach(v=>{if(v)m[v]=(m[v]||0)+1;});});return m;}
 function topKey(o){return Object.entries(o).sort((a,b)=>b[1]-a[1])[0]||['—',0];}
-function pct(v,t){return Math.round(v/t*100)+'%';}
+function pct(v,t){return t?Math.round(v/t*100)+'%':'0%';}
 
-function mkChart(id,type,labels,vals,opts={}){
+function mkChart(id,type,labels,vals){
   if(charts[id])charts[id].destroy();
   const ctx=document.getElementById(id)?.getContext('2d');
   if(!ctx)return;
   const isDoughnut=type==='doughnut';
-  const isBar=type==='bar';
-  charts[id]=new Chart(ctx,{
-    type,
-    data:{labels,datasets:[{data:vals,backgroundColor:opts.colors||C.slice(0,labels.length),
-      borderColor:'transparent',borderRadius:isBar?5:0,borderWidth:0,...(opts.dataset||{})}]},
-    options:{responsive:true,maintainAspectRatio:true,
-      plugins:{
-        legend:{display:isDoughnut,position:'right',labels:{color:'rgba(255,255,255,.5)',font:{size:11,family:'DM Sans'},boxWidth:10,padding:12,usePointStyle:true,pointStyleWidth:8}},
-        tooltip:{callbacks:{label:c=>` ${c.parsed}${isDoughnut?' ('+pct(c.parsed,vals.reduce((a,b)=>a+b,0))+')':''}` }},
-        ...(isDoughnut?{datalabels:{display:false}}:{})
-      },
-      cutout: isDoughnut?'62%':undefined,
-      scales:isBar?{
-        x:{ticks:{color:'rgba(255,255,255,.4)',font:{size:10}},grid:{color:'rgba(255,255,255,.03)'},border:{display:false}},
-        y:{ticks:{color:'rgba(255,255,255,.4)',font:{size:10}},grid:{color:'rgba(255,255,255,.03)'},border:{display:false}}
-      }:undefined,
-      ...opts.options
-    }
-  });
+  charts[id]=new Chart(ctx,{type,
+    data:{labels,datasets:[{data:vals,backgroundColor:C.slice(0,labels.length),borderColor:'transparent',borderRadius:isDoughnut?0:5}]},
+    options:{responsive:true,maintainAspectRatio:true,cutout:isDoughnut?'62%':undefined,
+      plugins:{legend:{display:isDoughnut,position:'right',labels:{color:'rgba(255,255,255,.5)',font:{size:11,family:'DM Sans'},boxWidth:10,padding:12,usePointStyle:true,pointStyleWidth:8}},
+        tooltip:{callbacks:{label:c=>` ${c.parsed}${isDoughnut?' ('+pct(c.parsed,vals.reduce((a,b)=>a+b,0))+')':''}`}}},
+      scales:!isDoughnut?{x:{ticks:{color:'rgba(255,255,255,.4)',font:{size:10}},grid:{color:'rgba(255,255,255,.03)'},border:{display:false}},
+        y:{ticks:{color:'rgba(255,255,255,.4)',font:{size:10}},grid:{color:'rgba(255,255,255,.03)'},border:{display:false}}}:undefined}});
 }
 
+// INSIGHT BARS HORIZONTAL — padrão único para todos
 function mkInsight(id,obj,total){
-  const sorted=Object.entries(obj).sort((a,b)=>b[1]-a[1]).slice(0,7);
+  const sorted=Object.entries(obj).sort((a,b)=>b[1]-a[1]).slice(0,8);
   const max=sorted[0]?.[1]||1;
   document.getElementById(id).innerHTML=sorted.map(([k,v])=>`
     <div class="irow">
@@ -482,93 +441,65 @@ function renderAbertas(id,key){
     :'<div style="color:var(--muted);font-size:13px;padding:8px 0">Nenhuma resposta ainda.</div>';
 }
 
-// ANIVERSÁRIOS
-const MESES=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 function renderAniversarios(){
   const hoje=new Date();
   const mesAtual=hoje.getMonth();
   const diaAtual=hoje.getDate();
-  const nomeMes=MESES[mesAtual];
-  document.getElementById('aniv-mes').textContent=nomeMes;
-
-  // Tentar extrair aniversários do campo detalhe_datas / datas_especiais
+  document.getElementById('aniv-mes').textContent=MESES[mesAtual];
   const anivs=[];
   data.forEach(r=>{
-    // Verifica campo dataAniversario no detalhe_datas (formato dd/mm)
     if(r.detalhe_datas){
       const matches=r.detalhe_datas.match(/(\d{1,2})\/(\d{1,2})/g);
-      if(matches){
-        matches.forEach(d=>{
-          const [dia,mes]=d.split('/').map(Number);
-          if(!isNaN(dia)&&!isNaN(mes)){
-            anivs.push({nome:r.nome_completo||'—',area:r.area||'—',dia,mes});
-          }
-        });
-      }
+      if(matches) matches.forEach(d=>{
+        const[dia,mes]=d.split('/').map(Number);
+        if(!isNaN(dia)&&!isNaN(mes)) anivs.push({nome:r.nome_completo||'—',area:r.area||'—',dia,mes});
+      });
     }
   });
-
-  // Aniversários deste mês (mes = mesAtual+1)
   const doMes=anivs.filter(a=>a.mes===mesAtual+1).sort((a,b)=>a.dia-b.dia);
-
-  if(doMes.length===0){
-    document.getElementById('aniv-list').innerHTML='<div class="aniv-empty">Nenhum aniversário cadastrado este mês.</div>';
-  } else {
-    document.getElementById('aniv-list').innerHTML=doMes.map(a=>{
-      const inicial=(a.nome||'?')[0].toUpperCase();
-      const diasRestantes=a.dia-diaAtual;
-      const diasLabel=diasRestantes===0?'🎉 Hoje!'
-        :diasRestantes===1?'Amanhã'
-        :diasRestantes>0?`Em ${diasRestantes} dias`
-        :`Dia ${a.dia}`;
+  document.getElementById('aniv-prox-label').textContent=`${doMes.length} aniversário(s) em ${MESES[mesAtual]}`;
+  document.getElementById('aniv-list').innerHTML=doMes.length
+    ?doMes.map(a=>{
+      const diasR=a.dia-diaAtual;
+      const diasLabel=diasR===0?'🎉 Hoje!':diasR===1?'Amanhã':diasR>0?`Em ${diasR} dias`:`Dia ${a.dia}`;
       return `<div class="aniv-item">
-        <div class="aniv-avatar">${inicial}</div>
-        <div class="aniv-info">
-          <div class="aniv-nome">${a.nome}</div>
-          <div class="aniv-data">${a.area} · Dia ${a.dia}/${a.mes}</div>
-          <div class="aniv-dias">${diasLabel}</div>
-        </div>
+        <div class="aniv-avatar">${(a.nome||'?')[0].toUpperCase()}</div>
+        <div><div class="aniv-nome">${a.nome}</div><div class="aniv-data">${a.area} · ${a.dia}/${a.mes}</div><div class="aniv-dias">${diasLabel}</div></div>
       </div>`;
-    }).join('');
-  }
-  document.getElementById('aniv-prox-label').textContent=`${doMes.length} aniversário(s) em ${nomeMes}`;
+    }).join('')
+    :'<div style="color:var(--muted);font-size:13px;font-style:italic">Nenhum aniversário cadastrado este mês.</div>';
 }
 
 function renderAll(){
   const n=data.length;
   if(!n){document.getElementById('loading').textContent='Nenhuma resposta ainda.';document.getElementById('loading').style.display='block';return;}
-
-  // STATS
-  document.getElementById('s-total').textContent=n;
-  const[ta,tan]=topKey(cnt('area'));
-  document.getElementById('s-area').textContent=ta;
-  document.getElementById('s-area-n').textContent=`${tan} de ${n} — área líder`;
   const nFilhos=data.filter(r=>r.tem_filhos===true).length;
   const nPet=data.filter(r=>r.tem_pet===true).length;
   const nRestr=data.filter(r=>r.restricao_alimentar&&r.restricao_alimentar!=='Não').length;
   const nLider=data.filter(r=>r.interesse_lideranca==='Sim').length;
+  const[ta,tan]=topKey(cnt('area'));
+  document.getElementById('s-total').textContent=n;
+  document.getElementById('s-area').textContent=ta;
+  document.getElementById('s-area-n').textContent=`${tan} de ${n} — área líder`;
   document.getElementById('s-filhos').textContent=nFilhos;
   document.getElementById('s-pet').textContent=nPet;
   document.getElementById('s-restricao').textContent=nRestr;
   document.getElementById('s-lider').textContent=nLider;
-
-  // ANIVERSÁRIOS
   renderAniversarios();
 
-  // CHARTS VISÃO GERAL
+  // Visão geral — doughnut para área, tempo, civil; insight bars para o resto
   const areas=cnt('area'); mkChart('c-area','doughnut',Object.keys(areas),Object.values(areas));
-  const tempos=cnt('tempo_empresa'); mkChart('c-tempo','bar',Object.keys(tempos),Object.values(tempos));
+  const tempos=cnt('tempo_empresa'); mkChart('c-tempo','doughnut',Object.keys(tempos),Object.values(tempos));
   const civil=cnt('estado_civil'); mkChart('c-civil','doughnut',Object.keys(civil),Object.values(civil));
-  const horario=cnt('horario_produtividade'); mkChart('c-horario','doughnut',Object.keys(horario),Object.values(horario));
+  mkInsight('i-horario',cnt('horario_produtividade'),n);
   mkInsight('i-presente',cntArr('preferencias_presente'),n);
   mkInsight('i-musica',cntArr('estilos_musica'),n);
 
-  // CHARTS WELLBEING
-  const lider=cnt('interesse_lideranca'); mkChart('c-lider','doughnut',Object.keys(lider),Object.values(lider));
+  // Wellbeing — tudo insight bars
+  mkInsight('i-lider',cnt('interesse_lideranca'),n);
   mkInsight('i-treino',cntArr('tipos_treinamento'),n);
-  const camisa=cnt('tamanho_camiseta'); mkChart('c-camisa','bar',Object.keys(camisa),Object.values(camisa));
+  mkInsight('i-camisa',cnt('tamanho_camiseta'),n);
 
-  // Triple stats
   document.getElementById('t-filhos-n').textContent=nFilhos;
   document.getElementById('t-filhos-p').textContent=pct(nFilhos,n)+' do time';
   document.getElementById('t-pet-n').textContent=nPet;
@@ -576,17 +507,12 @@ function renderAll(){
   document.getElementById('t-restricao-n').textContent=nRestr;
   document.getElementById('t-restricao-p').textContent=pct(nRestr,n)+' do time';
 
-  mkChart('c-filhos-pet','bar',
-    ['Com filhos','Sem filhos','Com pet','Sem pet','C/ restrição','Sem restrição'],
-    [nFilhos,n-nFilhos,nPet,n-nPet,nRestr,n-nRestr],
-    {colors:['#2DD4A0','rgba(45,212,160,.25)','#9B6DFF','rgba(155,109,255,.25)','#F0506E','rgba(240,80,110,.25)']}
-  );
+  mkInsight('i-familia',{'Com filhos':nFilhos,'Sem filhos':n-nFilhos,'Com pet':nPet,'Sem pet':n-nPet,'C/ restrição':nRestr,'Sem restrição':n-nRestr},n);
 
-  // Lista restrição
   const comRestr=data.filter(r=>r.restricao_alimentar&&r.restricao_alimentar!=='Não');
   document.getElementById('lista-restricao').innerHTML=comRestr.length
-    ?comRestr.map(r=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px">
-        <div><strong>${r.nome_completo||'—'}</strong> <span style="color:var(--muted);font-size:11px">${r.area||''}</span></div>
+    ?comRestr.map(r=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04)">
+        <div><strong style="font-size:13px">${r.nome_completo||'—'}</strong> <span style="color:var(--muted);font-size:11px">${r.area||''}</span></div>
         <div style="color:var(--red);font-size:12px">${r.restricao_alimentar}</div>
       </div>`).join('')
     :'<div style="color:var(--muted);font-size:13px;padding:8px 0">Nenhuma restrição cadastrada.</div>';
@@ -597,10 +523,58 @@ function renderAll(){
   renderTabela();
 }
 
+// CARD DRILL-DOWN MODAL
+function openCardModal(tipo){
+  let titulo='', items=[];
+  if(tipo==='total'){
+    titulo=`👥 Todos os colaboradores (${data.length})`;
+    items=data.map(r=>({nome:r.nome_completo,area:r.area,cargo:r.cargo,detalhe:`Tempo: ${r.tempo_empresa||'—'} · ${r.email||''}`}));
+  } else if(tipo==='area'){
+    titulo='🏢 Colaboradores por área';
+    const areas=cnt('area');
+    const sorted=Object.entries(areas).sort((a,b)=>b[1]-a[1]);
+    items=sorted.map(([area,qtd])=>{
+      const colabs=data.filter(r=>r.area===area).map(r=>r.nome_completo||'—').join(', ');
+      return {nome:area,area:`${qtd} colaborador(es)`,detalhe:colabs};
+    });
+  } else if(tipo==='filhos'){
+    titulo=`👶 Colaboradores com filhos (${data.filter(r=>r.tem_filhos===true).length})`;
+    items=data.filter(r=>r.tem_filhos===true).map(r=>({
+      nome:r.nome_completo,area:r.area,
+      detalhe:`${r.qtd_filhos?r.qtd_filhos+' filho(s)':''} ${r.nomes_idades_filhos?'· '+r.nomes_idades_filhos:''} ${r.filhos_gostam?'· Gostam de: '+r.filhos_gostam:''}`
+    }));
+  } else if(tipo==='pet'){
+    titulo=`🐾 Colaboradores com pet (${data.filter(r=>r.tem_pet===true).length})`;
+    items=data.filter(r=>r.tem_pet===true).map(r=>({
+      nome:r.nome_completo,area:r.area,
+      detalhe:`${r.tipo_pet||''} ${r.nome_pet?'· Nome: '+r.nome_pet:''}`
+    }));
+  } else if(tipo==='restricao'){
+    titulo=`⚠️ Restrições alimentares (${data.filter(r=>r.restricao_alimentar&&r.restricao_alimentar!=='Não').length})`;
+    items=data.filter(r=>r.restricao_alimentar&&r.restricao_alimentar!=='Não').map(r=>({
+      nome:r.nome_completo,area:r.area,
+      detalhe:`Restrição: ${r.restricao_alimentar}`
+    }));
+  } else if(tipo==='lider'){
+    titulo=`🚀 Interesse em liderança (${data.filter(r=>r.interesse_lideranca==='Sim').length})`;
+    items=data.filter(r=>r.interesse_lideranca==='Sim').map(r=>({
+      nome:r.nome_completo,area:r.area,cargo:r.cargo,
+      detalhe:`Treinamentos: ${(r.tipos_treinamento||[]).join(', ')||'—'} · ${r.treinamento_especifico||''}`
+    }));
+  }
+  document.getElementById('cm-title').textContent=titulo;
+  document.getElementById('cm-body').innerHTML=items.length
+    ?items.map(it=>`<div class="cm-item">
+        <div class="cm-nome">${it.nome||'—'} ${it.area?'<span style="color:var(--muted);font-size:11px;font-weight:400">· '+it.area+'</span>':''} ${it.cargo?'<span style="color:var(--muted);font-size:11px;font-weight:400">· '+it.cargo+'</span>':''}</div>
+        ${it.detalhe?`<div class="cm-detalhe">${it.detalhe.trim()}</div>`:''}
+      </div>`).join('')
+    :'<div style="color:var(--muted);font-size:13px">Nenhum resultado.</div>';
+  document.getElementById('card-modal-overlay').classList.add('open');
+}
+function closeCardModal(){document.getElementById('card-modal-overlay').classList.remove('open');}
+
 function simNao(val){
-  return val===true
-    ?'<span class="badge badge-green">Sim</span>'
-    :'<span style="color:var(--muted);font-size:12px">Não</span>';
+  return val===true?'<span class="badge badge-green">Sim</span>':'<span style="color:var(--muted);font-size:12px">Não</span>';
 }
 
 function renderTabela(){
@@ -615,7 +589,7 @@ function renderTabela(){
       <td><span class="badge badge-yellow">${r.tempo_empresa||'—'}</span></td>
       <td>${simNao(r.tem_filhos)}</td>
       <td>${simNao(r.tem_pet)}</td>
-      <td>${r.restricao_alimentar&&r.restricao_alimentar!=='Não'?`<span class="badge badge-red">⚠️ Sim</span>`:'<span style="color:var(--muted);font-size:12px">Não</span>'}</td>
+      <td>${r.restricao_alimentar&&r.restricao_alimentar!=='Não'?'<span class="badge badge-red">⚠️ Sim</span>':'<span style="color:var(--muted);font-size:12px">Não</span>'}</td>
       <td style="color:var(--muted);font-size:12px">${new Date(r.criado_em).toLocaleDateString('pt-BR')} ${new Date(r.criado_em).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</td>
       <td style="white-space:nowrap">
         <button class="btn-sm btn-ver" onclick="openModal(${data.indexOf(r)})">Ver ficha</button>
@@ -624,7 +598,6 @@ function renderTabela(){
     </tr>`).join('');
 }
 
-// DELETE
 function confirmDelete(id,nome){
   deleteId=id;
   document.getElementById('confirm-txt').textContent=`Tem certeza que deseja excluir a ficha de ${nome}? Esta ação não pode ser desfeita.`;
@@ -634,16 +607,13 @@ function closeConfirm(){document.getElementById('confirm-overlay').classList.rem
 async function doDelete(){
   if(!deleteId)return;
   try{
-    await fetch(`${URL}/rest/v1/brasil_bitcoin_respostas?id=eq.${deleteId}`,
+    await fetch(`${SURL}/rest/v1/brasil_bitcoin_respostas?id=eq.${deleteId}`,
       {method:'DELETE',headers:{'apikey':KEY,'Authorization':'Bearer '+KEY,'Prefer':'return=minimal'}});
     data=data.filter(r=>r.id!==deleteId);
-    closeConfirm();
-    closeModal();
-    renderAll();
+    closeConfirm(); closeModal(); renderAll();
   }catch(e){alert('Erro ao excluir.');}
 }
 
-// MODAL
 function mrow(lbl,val,full=false,cls=''){
   if(val===null||val===undefined||val==='')return '';
   let d=val;
@@ -706,10 +676,8 @@ function openModal(i){
   </div></div>`;
   if(r.momento_pessoal||r.momento_empresa||(r.datas_especiais&&r.datas_especiais.length)){
     html+=`<div class="msec"><h3>Momentos Especiais</h3><div class="mgrid">
-      ${mrow('Momento pessoal',r.momento_pessoal,true)}
-      ${mrow('Momento na empresa',r.momento_empresa,true)}
-      ${mrow('Datas especiais',r.datas_especiais,true)}
-      ${mrow('Detalhes',r.detalhe_datas,true)}
+      ${mrow('Momento pessoal',r.momento_pessoal,true)}${mrow('Momento na empresa',r.momento_empresa,true)}
+      ${mrow('Datas especiais',r.datas_especiais,true)}${mrow('Detalhes',r.detalhe_datas,true)}
     </div></div>`;
   }
   if(r.fotos_urls&&r.fotos_urls.length){
