@@ -935,7 +935,7 @@ const SUPABASE_URL = 'https://cxauptpngygewxlcgatt.supabase.co';
     return el ? el.value.trim() : '';
   }
 
-  function submitForm() {
+  async function submitForm() {
     const nomeCompleto = val('nome');
     const primeiroNome = nomeCompleto.split(' ')[0] || '';
 
@@ -988,6 +988,10 @@ const SUPABASE_URL = 'https://cxauptpngygewxlcgatt.supabase.co';
       dataOutra:            val('data-outra'),
     };
 
+    // Capturar arquivos ANTES de mostrar agradecimento (fileInput ainda existe no DOM)
+    const fileInputEl = document.getElementById('fileInput');
+    const capturedFiles = fileInputEl ? Array.from(fileInputEl.files) : [];
+
     // Mostrar tela de agradecimento imediatamente (UX)
     const titulo = document.getElementById('thankyou-title');
     titulo.textContent = primeiroNome ? 'Obrigado, ' + primeiroNome + '!' : 'Obrigado!';
@@ -998,7 +1002,35 @@ const SUPABASE_URL = 'https://cxauptpngygewxlcgatt.supabase.co';
     document.getElementById('prog-pct').textContent = '100% concluído';
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-// Enviar dados para o Supabase em background
+// Upload de fotos para o Supabase Storage
+    async function uploadFotos() {
+      const files = capturedFiles;
+      const urls = [];
+      const nomeSlug = data.nome.replace(/\s+/g, '-').toLowerCase();
+      const timestamp = Date.now();
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const ext = file.name.split('.').pop();
+        const path = `${nomeSlug}-${timestamp}-${i}.${ext}`;
+        const res = await fetch(`${SUPABASE_URL}/storage/v1/object/colaboradores-fotos/${path}`, {
+          method: 'POST',
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': 'Bearer ' + SUPABASE_KEY,
+            'Content-Type': file.type,
+            'x-upsert': 'true'
+          },
+          body: file
+        });
+        if (res.ok) {
+          urls.push(`${SUPABASE_URL}/storage/v1/object/public/colaboradores-fotos/${path}`);
+        }
+      }
+      return urls;
+    }
+
+    // Enviar dados para o Supabase em background
+    const fotoUrls = await uploadFotos();
     const payload = {
       email:                   data.email,
       nome_completo:           data.nome,
@@ -1041,7 +1073,8 @@ const SUPABASE_URL = 'https://cxauptpngygewxlcgatt.supabase.co';
       momento_pessoal:         data.momentoPessoal,
       momento_empresa:         data.momentoEmpresa,
       datas_especiais:         data.datasEspeciais ? data.datasEspeciais.split(', ') : [],
-      detalhe_datas:           [data.dataAniversario, data.dataCasamento, data.dataFilho, data.dataOutra].filter(Boolean).join(' | ')
+      detalhe_datas:           [data.dataAniversario, data.dataCasamento, data.dataFilho, data.dataOutra].filter(Boolean).join(' | '),
+      fotos_urls:              fotoUrls
     };
 
     // Enviar e-mail automático para o RH
